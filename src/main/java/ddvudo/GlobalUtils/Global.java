@@ -162,8 +162,10 @@ public class Global {
 			try (FileOutputStream fos = new FileOutputStream(file)) {
 				fos.write(getData);
 			}
+			Global.Logger(Global.class).info("info:" + url + " download success");
+		} catch (Exception e) {
+			Global.Logger(Global.class).error(e);
 		}
-		Global.Logger(Global.class).info("info:" + url + " download success");
 	}
 
 	/**
