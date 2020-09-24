@@ -1,4 +1,7 @@
+import com.alibaba.fastjson.JSON;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import ddvudo.Application;
+import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.POJO.WireGuardConfig;
 import ddvudo.Service.Services.WireGuardService;
 import freemarker.template.Configuration;
@@ -11,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootTest(classes = Application.class)
@@ -30,14 +34,14 @@ public class DataTest {
 		Writer out = null;
 		configuration.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 		Template template = configuration.getTemplate("wgConfigTemplate.ftl");
+		List<String> res = new LinkedList<>();
 		for (int i = 0; i < configList.size(); i++) {
-			File docFile = new File("F:\\wg\\" + "wg" + i + ".conf");
-			if (i == 0) {
-				docFile = new File("F:\\wg\\" + "wg-server.conf");
-			}
-			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile)));
+			OutputStream output = new ByteOutputStream();
+			out = new BufferedWriter(new OutputStreamWriter(output));
 			template.process(configList.get(i), out);
 			out.flush();
+			res.add(output.toString());
 		}
+		Global.Logger(DataTest.class).info(JSON.toJSONString(res));
 	}
 }
