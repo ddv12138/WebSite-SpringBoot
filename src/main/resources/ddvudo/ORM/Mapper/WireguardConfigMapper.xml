@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddvudo.ORM.Mapper.WireGuardConfigMapper">
+    <resultMap id="baseResultMap" type="ddvudo.ORM.POJO.WireGuardConfig">
+        <id column="id" property="id"/>
+        <association property="Interface" javaType="ddvudo.ORM.POJO.WireGuardConfig$Interface"
+                     select="selectEGInterfaceById" column="interface_id"></association>
+        <association property="Peer" javaType="ddvudo.ORM.POJO.WireGuardConfig$Peer" select="selectWGPeerById"
+                     column="peer_id"></association>
+    </resultMap>
+    <insert id="insertWireguardConfig" parameterType="ddvudo.ORM.POJO.WireGuardConfig" keyProperty="id">
+        insert into wireguard(interface_id,peerid) values (#{Interface.id},#{peer.id});
+    </insert>
+    <insert id="insertWGInterface" parameterType="ddvudo.ORM.POJO.WireGuardConfig$Interface" keyProperty="id">
+        insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns)
+        values (#{private_key},#{address},#{listen_port},#{post_up},#{post_down},#{dns});
+    </insert>
+    <insert id="insertWGPeer" parameterType="ddvudo.ORM.POJO.WireGuardConfig$Peer" keyProperty="id">
+        insert into wireguard_interface(public_key,allowed_ips,endpoint,persistent_keep_alive)
+        values (#{public_key},#{allowed_ips},#{endpoint},#{persistent_keep_alive});
+    </insert>
+    <select id="selectWGList" resultMap="baseResultMap">
+        select * from wireguard;
+    </select>
+    <select id="selectWGInterfaceById" resultType="ddvudo.ORM.POJO.WireGuardConfig$Interface" parameterType="int">
+        select * from wireguard_interface where id = #{id}
+    </select>
+    <select id="selectWGPeerById" resultType="ddvudo.ORM.POJO.WireGuardConfig$Peer" parameterType="int">
+        select * from wireguard_peer where id = #{id}
+    </select>
+</mapper>

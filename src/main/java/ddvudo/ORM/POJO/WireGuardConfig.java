@@ -4,8 +4,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WireGuardConfig {
+	Integer id;
 	Interface Interface = new Interface();
 	List<Peer> peers = new LinkedList<Peer>();
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setPeers(List<Peer> peers) {
+		this.peers = peers;
+	}
 
 	public Interface getInterface() {
 		return Interface;
@@ -20,12 +33,21 @@ public class WireGuardConfig {
 	}
 
 	public class Interface {
+		Integer id;
 		String PrivateKey;
 		String Address;
 		Integer ListenPort;
 		String PostUp;
 		String PostDown;
 		String DNS;
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
 
 		public String getPrivateKey() {
 			return PrivateKey;
@@ -83,10 +105,19 @@ public class WireGuardConfig {
 	}
 
 	public class Peer {
+		Integer id;
 		String PublicKey;
 		String AllowedIPs;
 		String Endpoint;
 		Integer PersistentKeepalive;
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
 
 		public String getPublicKey() {
 			return PublicKey;
