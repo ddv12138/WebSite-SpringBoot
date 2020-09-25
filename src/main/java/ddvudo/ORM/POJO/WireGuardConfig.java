@@ -1,5 +1,7 @@
 package ddvudo.ORM.POJO;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,8 +18,8 @@ public class WireGuardConfig {
 		this.id = id;
 	}
 
-	public void setPeers(List<Peer> peers) {
-		this.peers = peers;
+	public List<Peer> getPeer() {
+		return peers;
 	}
 
 	public Interface getInterface() {
@@ -28,8 +30,8 @@ public class WireGuardConfig {
 		this.Interface = anInterface;
 	}
 
-	public List<Peer> getPeers() {
-		return peers;
+	public void setPeer(List<Peer> peers) {
+		this.peers = peers;
 	}
 
 	public class Interface {
@@ -154,5 +156,10 @@ public class WireGuardConfig {
 			PersistentKeepalive = persistentKeepalive;
 			return this;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
 	}
 }

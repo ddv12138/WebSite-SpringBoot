@@ -55,11 +55,15 @@ public class WireGuardServiceimpl implements WireGuardService {
 		String serverPub = Base64.getEncoder().encodeToString(serverkeyPair.getPublicKey());
 		String serverPri = Base64.getEncoder().encodeToString(serverkeyPair.getPrivateKey());
 		WireGuardConfig config = new WireGuardConfig();
-		String subNetShadow = serverCIDR.substring(serverCIDR.lastIndexOf("/") + 1);
-		serverCIDR = serverCIDR.substring(0, serverCIDR.lastIndexOf("/"));
+		String serverIp = serverCIDR;
+		String subNetShadow = "24";
+		if (serverCIDR.lastIndexOf("/") >= 0) {
+			serverIp = serverCIDR.substring(0, serverCIDR.lastIndexOf("/"));
+			subNetShadow = serverCIDR.substring(serverCIDR.lastIndexOf("/") + 1);
+		}
 		String serverPrefix = serverCIDR.substring(0, serverCIDR.lastIndexOf("."));
 
-		config.getInterface().setAddress(serverPrefix + "." + 1).setListenPort(listeningPort)
+		config.getInterface().setAddress(serverPrefix + "." + 1 + "/" + subNetShadow).setListenPort(listeningPort)
 				.setPrivateKey(serverPri);
 		if (!StringUtils.isEmpty(postUpRule)) {
 			config.getInterface().setPostUp(postUpRule);
@@ -68,6 +72,8 @@ public class WireGuardServiceimpl implements WireGuardService {
 			config.getInterface().setPostDown(postDownRule);
 		}
 		configs.add(config);
+		if (!StringUtils.isEmpty(ClientDns))
+			config.getInterface().setDNS(ClientDns);
 		for (int i = 2; i < numberOfClients + 2; i++) {
 			Curve25519KeyPair peerKeyPair = Curve25519.getInstance(Curve25519.JAVA).generateKeyPair();
 			String peerPub = Base64.getEncoder().encodeToString(peerKeyPair.getPublicKey());
@@ -75,15 +81,15 @@ public class WireGuardServiceimpl implements WireGuardService {
 
 			WireGuardConfig.Peer peer = config.new Peer();
 			peer.setPublicKey(peerPub).setAllowedIPs(serverPrefix + "." + i);
-			config.getPeers().add(peer);
+			config.getPeer().add(peer);
 
 			WireGuardConfig peerConfig = new WireGuardConfig();
-			peerConfig.getInterface().setPrivateKey(peerPri).setAddress(serverPrefix + "." + i + "/" + subNetShadow);
-			if (!StringUtils.isEmpty(ClientDns))
-				peerConfig.getInterface().setDNS(ClientDns);
+			String clientCIDR = serverPrefix + "." + i + "/" + subNetShadow;
+			peerConfig.getInterface().setPrivateKey(peerPri).setAddress(clientCIDR);
 			WireGuardConfig.Peer peerOfpeer = peerConfig.new Peer();
-			peerOfpeer.setPublicKey(serverPub).setAllowedIPs("0.0.0.0/0").setEndpoint(Endpoint);
-			peerConfig.getPeers().add(peerOfpeer);
+			peerOfpeer.setPublicKey(serverPub).setAllowedIPs(serverPrefix + "." + 0 + "/" + subNetShadow)
+					.setEndpoint(Endpoint);
+			peerConfig.getPeer().add(peerOfpeer);
 			configs.add(peerConfig);
 		}
 		return configs;

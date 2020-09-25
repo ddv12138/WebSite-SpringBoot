@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface WireGuardConfigMapper {
-	int insertWireguardConfig(WireGuardConfig config);
+	int insertWireguardConfig(@Param("config") WireGuardConfig config);
 
 	int insertWGInterface(WireGuardConfig.Interface wgInterface);
 
