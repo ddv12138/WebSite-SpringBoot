@@ -3,31 +3,46 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ddvudo.ORM.Mapper.WireGuardConfigMapper">
-    <resultMap id="baseResultMap" type="ddvudo.ORM.POJO.WireGuardConfig">
-        <id column="id" property="id"/>
-        <association property="Interface" javaType="ddvudo.ORM.POJO.WireGuardConfig$Interface"
-                     select="selectEGInterfaceById" column="interface_id"></association>
-        <association property="Peer" javaType="ddvudo.ORM.POJO.WireGuardConfig$Peer" select="selectWGPeerById"
-                     column="peer_id"></association>
+    <resultMap id="BaseResultMap" type="ddvudo.ORM.POJO.WireGuardConfig" autoMapping="false">
+        <association property="anInterface" javaType="ddvudo.ORM.POJO.Interface"
+                     select="selectWGInterfaceById" column="id">
+            <id property="id" column="id"/>
+            <result property="privateKey" column="private_key"/>
+            <result property="address" column="address"/>
+            <result property="listenPort" column="listen_port"/>
+            <result property="postUp" column="post_up"/>
+            <result property="postDown" column="post_down"/>
+            <result property="DNS" column="dns"/>
+            <result property="serverId" column="server_id"/>
+        </association>
+        <!--        <association property="peers" javaType="ddvudo.ORM.POJO.WireGuardConfig$Peer" select="selectWGPeerById">-->
+        <!--        </association>-->
     </resultMap>
-    <insert id="insertWireguardConfig" parameterType="ddvudo.ORM.POJO.WireGuardConfig" keyProperty="id">
-        insert into wireguard(interface_id,peerid) values (#{config.Interface.id},#{config.peer.id});
+    <resultMap id="WGInterfaceResultMap" type="ddvudo.ORM.POJO.Interface">
+        <id property="id" column="id"/>
+        <result property="privateKey" column="private_key"/>
+        <result property="address" column="address"/>
+        <result property="listenPort" column="listen_port"/>
+        <result property="postUp" column="post_up"/>
+        <result property="postDown" column="post_down"/>
+        <result property="DNS" column="dns"/>
+        <result property="serverId" column="server_id"/>
+    </resultMap>
+    <insert id="insertWGInterface" parameterType="ddvudo.ORM.POJO.Interface" keyProperty="id" useGeneratedKeys="true">
+        insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns,server_id)
+        values (#{privateKey},#{address},#{listenPort},#{postUp},#{postDown},#{DNS},#{serverId});
     </insert>
-    <insert id="insertWGInterface" parameterType="ddvudo.ORM.POJO.WireGuardConfig$Interface" keyProperty="id">
-        insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns)
-        values (#{private_key},#{address},#{listen_port},#{post_up},#{post_down},#{dns});
+    <insert id="insertWGPeer" parameterType="ddvudo.ORM.POJO.Peer" keyProperty="id" useGeneratedKeys="true">
+        insert into wireguard_peer(public_key,allowed_ips,endpoint,persistent_keep_alive,interface_id)
+        values (#{publicKey},#{allowedIPs},#{endpoint},#{persistentKeepalive},#{interfaceId});
     </insert>
-    <insert id="insertWGPeer" parameterType="ddvudo.ORM.POJO.WireGuardConfig$Peer" keyProperty="id">
-        insert into wireguard_interface(public_key,allowed_ips,endpoint,persistent_keep_alive)
-        values (#{public_key},#{allowed_ips},#{endpoint},#{persistent_keep_alive});
-    </insert>
-    <select id="selectWGList" resultMap="baseResultMap">
-        select * from wireguard;
-    </select>
-    <select id="selectWGInterfaceById" resultType="ddvudo.ORM.POJO.WireGuardConfig$Interface" parameterType="int">
+    <select id="selectWGInterfaceById" resultType="ddvudo.ORM.POJO.Interface">
         select * from wireguard_interface where id = #{id}
     </select>
-    <select id="selectWGPeerById" resultType="ddvudo.ORM.POJO.WireGuardConfig$Peer" parameterType="int">
+    <select id="selectWGPeerById" resultType="ddvudo.ORM.POJO.Peer">
         select * from wireguard_peer where id = #{id}
+    </select>
+    <select id="selectWGServerList" resultMap="BaseResultMap">
+        select * from wireguard_interface where server_id is null;
     </select>
 </mapper>

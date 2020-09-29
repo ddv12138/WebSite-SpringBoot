@@ -1,6 +1,8 @@
 package ddvudo.Service;
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import ddvudo.ORM.Mapper.WireGuardConfigMapper;
+import ddvudo.ORM.POJO.Peer;
 import ddvudo.ORM.POJO.WireGuardConfig;
 import ddvudo.Service.Services.WireGuardService;
 import freemarker.template.Configuration;
@@ -27,9 +29,30 @@ public class WireGuardServiceimpl implements WireGuardService {
 	Configuration FreeMarkConfig;
 	@Value("${wireguard.config.dir:/etc/wireguard/}")
 	private String configPath;
+	@Autowired
+	WireGuardConfigMapper wireGuardConfigMapper;
 
 	@Override
-	public boolean SaveConfigs(List<WireGuardConfig> configList) throws IOException, TemplateException {
+	public boolean SaveConfigs(List<WireGuardConfig> configs) {
+		Integer currServerId = null;
+		for (WireGuardConfig config : configs) {
+			if (null != currServerId) {
+				config.getAnInterface().setServerId(currServerId);
+			}
+			wireGuardConfigMapper.insertWGInterface(config.getAnInterface());
+			if (configs.indexOf(config) == 0) {
+				currServerId = config.getAnInterface().getId();
+			}
+			for (Peer peer : config.getPeer()) {
+				peer.setInterfaceId(config.getAnInterface().getId());
+				wireGuardConfigMapper.insertWGPeer(peer);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean SaveConfigsTOFiles(List<WireGuardConfig> configList) throws IOException, TemplateException {
 		Assert.isTrue(StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
 		File configDir = new File(configPath);
 		Assert.isTrue(configDir.isDirectory(), "配置文件夹不存在，请检查是否有wireguard环境");
@@ -63,30 +86,33 @@ public class WireGuardServiceimpl implements WireGuardService {
 		}
 		String serverPrefix = serverCIDR.substring(0, serverCIDR.lastIndexOf("."));
 
-		config.getInterface().setAddress(serverPrefix + "." + 1 + "/" + subNetShadow).setListenPort(listeningPort)
+		config.getAnInterface().setAddress(serverPrefix + "." + 1 + "/" + subNetShadow).setListenPort(listeningPort)
 				.setPrivateKey(serverPri);
 		if (!StringUtils.isEmpty(postUpRule)) {
-			config.getInterface().setPostUp(postUpRule);
+			config.getAnInterface().setPostUp(postUpRule);
 		}
 		if (!StringUtils.isEmpty(postDownRule)) {
-			config.getInterface().setPostDown(postDownRule);
+			config.getAnInterface().setPostDown(postDownRule);
 		}
 		configs.add(config);
 		if (!StringUtils.isEmpty(ClientDns))
-			config.getInterface().setDNS(ClientDns);
+			config.getAnInterface().setDNS(ClientDns);
 		for (int i = 2; i < numberOfClients + 2; i++) {
 			Curve25519KeyPair peerKeyPair = Curve25519.getInstance(Curve25519.JAVA).generateKeyPair();
 			String peerPub = Base64.getEncoder().encodeToString(peerKeyPair.getPublicKey());
 			String peerPri = Base64.getEncoder().encodeToString(peerKeyPair.getPrivateKey());
 
-			WireGuardConfig.Peer peer = config.new Peer();
+			Peer peer = new Peer();
 			peer.setPublicKey(peerPub).setAllowedIPs(serverPrefix + "." + i);
 			config.getPeer().add(peer);
 
 			WireGuardConfig peerConfig = new WireGuardConfig();
 			String clientCIDR = serverPrefix + "." + i + "/" + subNetShadow;
-			peerConfig.getInterface().setPrivateKey(peerPri).setAddress(clientCIDR);
-			WireGuardConfig.Peer peerOfpeer = peerConfig.new Peer();
+			peerConfig.getAnInterface().setPrivateKey(peerPri).setAddress(clientCIDR);
+			Peer peerOfpeer = new Peer();
+			if (!Endpoint.contains(":")) {
+				Endpoint += ":" + listeningPort;
+			}
 			peerOfpeer.setPublicKey(serverPub).setAllowedIPs(serverPrefix + "." + 0 + "/" + subNetShadow)
 					.setEndpoint(Endpoint);
 			peerConfig.getPeer().add(peerOfpeer);

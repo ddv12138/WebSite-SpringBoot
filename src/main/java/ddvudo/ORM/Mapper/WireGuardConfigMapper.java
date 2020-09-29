@@ -1,18 +1,24 @@
 package ddvudo.ORM.Mapper;
 
+import ddvudo.ORM.POJO.Interface;
+import ddvudo.ORM.POJO.Peer;
 import ddvudo.ORM.POJO.WireGuardConfig;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 @Mapper
 @Repository
 public interface WireGuardConfigMapper {
-	int insertWireguardConfig(@Param("config") WireGuardConfig config);
 
-	int insertWGInterface(WireGuardConfig.Interface wgInterface);
+	int insertWGInterface(Interface wgInterface);
 
-	int insertWGPeer(WireGuardConfig.Peer peer);
+	int insertWGPeer(Peer peer);
 
-	WireGuardConfig selectWGList(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+	Interface selectWGInterfaceById(int id);
+
+	ArrayList<WireGuardConfig> selectWGServerList(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
 }
