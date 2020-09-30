@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>添加菜单项</title>
+	<link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+	<style>
+        .icon-item:hover {
+            color: #2D8CF0;
+            background: #ccc;
+        }
+
+        .icon-item {
+            font-size: 32px;
+            color: #444;
+            padding: 1rem;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        .activeicon {
+            color: #2D8CF0;
+            background: #ccc;
+        }
+
+        .infinite-list {
+            overflow: auto;
+            border: 1px solid #DCDFE6;
+            padding: 0.2rem;
+            border-radius: 4px;
+            max-height: 10rem;
+            max-width: 51rem;
+        }
+	</style>
+</head>
+<body>
+<el-card class="box-card">
+	<el-form :label-position="labelPosition" :model="resource" :rules="rules" class="demo-ruleForm" id="form"
+	         label-width="100px"
+	         ref="resource">
+		<el-form-item label="ServerCIDR地址(10.0.0.1/24形式)" prop="ServerCIDR">
+			<el-input v-model="resource.ServerCIDR"></el-input>
+		</el-form-item>
+		<el-form-item label="服务端监听端口号" prop="port">
+			<el-input v-model.number="resource.port"></el-input>
+		</el-form-item>
+		<el-form-item label="客户端数量" prop="numberOfClients">
+			<el-input v-model.number="resource.numberOfClients"></el-input>
+		</el-form-item>
+		<el-form-item label="客户端连接的服务端地址(your.domin:1234形式)" prop="endPoint">
+			<el-input v-model="resource.endPoint"></el-input>
+		</el-form-item>
+		<el-form-item label="服务端的dns地址" prop="dns">
+			<el-input v-model="resource.dns"></el-input>
+		</el-form-item>
+		<el-form-item label="postUpRule(用于配置防火墙放行及nat转发，配置生效后执行)" prop="postUpRule">
+			<el-input v-model="resource.postUpRule"></el-input>
+		</el-form-item>
+		<el-form-item label="postDownRule(用于配置防火墙放行及nat转发，配置关闭后执行)" prop="postDownRule">
+			<el-input v-model="resource.postDownRule"></el-input>
+		</el-form-item>
+		<el-form-item label="备注" prop="remark">
+			<el-input v-model="resource.remark"></el-input>
+		</el-form-item>
+		<el-form-item>
+			<el-button @click="submitForm('resource')" type="primary">提交</el-button>
+			<el-button @click="resetForm('resource')">重置</el-button>
+		</el-form-item>
+	</el-form>
+</el-card>
+</body>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
+<script src="/res/sa.js"></script>
+<script type="text/javascript">
+    window.setData = function (data, modify) {
+        let formdata = {};
+        if (!modify) {
+            formdata = {
+                ServerCIDR: '10.1.1.1/24',
+                port: '8080',
+                numberOfClients: '',
+                endPoint: '',
+                postUpRule: '',
+                postDownRule: '',
+                remark: ''
+            };
+        }
+        let resource = new Vue({
+            el: "#form",
+            data: {
+                isModify: modify,
+                labelPosition: "top",
+                resource: formdata,
+                icon: {
+                    pagenum: 1,
+                    pagesize: 30,
+                    iconList: [],
+                    count: 31,
+                },
+                rules: {
+                    ServerCIDR: [
+                        {required: true, message: '请输入ServerCIDR地址', trigger: 'blur'},
+                    ],
+                    port: [
+                        {required: true, message: '请输入端口', trigger: 'blur'},
+                        {type: 'number', message: '端口必须为数字值', trigger: 'blur'}
+                    ],
+                    numberOfClients: [
+                        {required: true, message: '请输入客户端数量', trigger: 'blur'},
+                        {type: 'number', message: '客户端数量必须为数字值', trigger: 'blur'}
+                    ],
+                    endPoint: [
+                        {required: true, message: '请输入客户端连接的服务端地址', trigger: 'blur'}
+                    ],
+                    postUpRule: [
+                        {required: true, message: '请输入postUpRule', trigger: 'blur'}
+                    ],
+                    postDownRule: [
+                        {required: true, message: '请输入postDownRule', trigger: 'blur'}
+                    ],
+                    remark: [
+                        {required: true, message: '请输入备注', trigger: 'blur'}
+                    ],
+                    dns: [
+                        {required: true, message: '请输入dns', trigger: 'blur'}
+                    ]
+                }
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            let data = JSON.stringify(this.$refs[formName].model);
+                            if (!this.isModify) {
+                                //新增时
+                                console.log(this.$refs[formName].model)
+                                sa.post("/wg/genconfig", this.$refs[formName].model, function (data, status, xhr) {
+                                    if (data && data.state) {
+                                        layer.alert('添加成功', {icon: 1}, function (index) {
+                                            layer.close(index);
+                                            let curr_index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            parent.layer.close(curr_index); //再执行关闭
+                                            parent.loadData();
+                                        });
+                                    }
+                                }, "json");
+                            } else {
+                                //修改时
+                                // $.ajax({
+                                //     url: '/resource',
+                                //     type: 'PUT',
+                                //     data: JSON.stringify(this.$refs[formName].model),
+                                //     success: function (data) {
+                                //         if (data && data.state) {
+                                //             layer.alert('更新成功', {icon: 1}, function (index) {
+                                //                 layer.close(index);
+                                //                 let curr_index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                //                 parent.layer.close(curr_index); //再执行关闭
+                                //                 parent.refreshTreeData();
+                                //             });
+                                //         }
+                                //     }
+                                // });
+                                sa.put('/resource', JSON.stringify(this.$refs[formName].model), function (data) {
+                                    if (data && data.state) {
+                                        layer.alert('更新成功', {icon: 1}, function (index) {
+                                            layer.close(index);
+                                            let curr_index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            parent.layer.close(curr_index); //再执行关闭
+                                            parent.refreshTreeData();
+                                        });
+                                    }
+                                })
+                            }
+                        } else {
+                            alert('出现错误!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                choseIcon(arg) {
+                    this.icon.iconList.forEach(ele => {
+                        ele.isActive = false
+                    });
+                    arg.isActive = true;
+                    this.resource.icon = arg.name;
+                    this.resource = JSON.parse(JSON.stringify(this.resource));
+                },
+                loadicon(arg) {
+                    if (this.icon.pagenum >= (this.icon.count / this.icon.pagesize) + 1) {
+                        return;
+                    }
+                    sa.get("/icon/list", {
+                        pagesize: this.icon.pagesize,
+                        pagenum: this.icon.pagenum
+                    }, function (res) {
+                        if (res && res.state && res.data) {
+                            console.log(res.data);
+                            this.icon.iconList = this.icon.iconList.concat(res.data.data);
+                            this.icon.count = res.data.count;
+                            if (this.icon.pagenum < (this.icon.count / this.icon.pagesize) + 1) {
+                                this.icon.pagenum += 1;
+                            }
+                        }
+                    }.bind(this))
+                }
+            }
+        })
+    }
+</script>
+</html>

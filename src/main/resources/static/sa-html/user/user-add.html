@@ -64,7 +64,6 @@
         methods: {
             // ok
             ok: function (pageNo) {
-                this.$message('数据添加, 参数：' + JSON.stringify(this.user));
                 sa.post("/user", this.user, function (res) {
                     if (res && res.state && res.data) {
                         layer.alert('添加成功', {}, function () {

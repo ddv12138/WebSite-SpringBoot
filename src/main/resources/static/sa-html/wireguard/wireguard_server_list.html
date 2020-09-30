@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>服务列表</title>
+	<meta charset="utf-8">
+	<meta content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+	      name="viewport"/>
+
+	<!-- 所有的 css 资源 -->
+	<link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+	<link href="../../res/sa.css" rel="stylesheet">
+
+	<!-- 所有的 js 资源 -->
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+	<script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
+	<script src="../../res/kj/laydate/laydate.js"></script>
+	<script src="../../res/sa.js"></script>
+
+	<style type="text/css">
+
+	</style>
+
+</head>
+<body>
+
+<!-- 防止margin向下击穿 -->
+<div style="margin-top: -1em;"><br></div>
+
+<div :style="'display: block;'" class="vue-box" style="display: none;">
+	<!-- 参数栏 -->
+	<div class="c-panel">
+		<div class="c-title">检索参数</div>
+		<el-form ref="form">
+			<div class="c-item" style="min-width: 0px;">
+				<el-button @click="loadData" icon="el-icon-search" size="mini" type="primary">查询</el-button>
+				<el-button @click="newData" icon="el-icon-search" size="mini" type="primary">新建</el-button>
+			</div>
+		</el-form>
+	</div>
+	<!-- 数据栏 -->
+	<div class="c-panel">
+		<div class="c-title">列表</div>
+		<el-table :data="dataList" class="data-table" size="mini" style="width: 100%">
+
+			<el-table-column label="编号" type="index" width="70px"></el-table-column>
+			<el-table-column label="私钥" prop="privateKey" width="200px">
+				<template slot-scope="scope">
+					<div style="float: left; width: 130px; line-height: 20px;">
+						<b>{{scope.row.anInterface.privateKey}}</b>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="地址" prop="address">
+				<template slot-scope="scope">
+					<div style="float: left; width: 130px; line-height: 20px;">
+						<b>{{scope.row.anInterface.address}}</b>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="端口" prop="listenPort">
+				<template slot-scope="scope">
+					<div style="float: left; width: 130px; line-height: 20px;">
+						<b>{{scope.row.anInterface.listenPort}}</b>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="dns" prop="dns">
+				<template slot-scope="scope">
+					<div style="float: left; width: 130px; line-height: 20px;">
+						<b>{{scope.row.anInterface.dns}}</b>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="备注" prop="remark">
+				<template slot-scope="scope">
+					<div style="float: left; width: 130px; line-height: 20px;">
+						<b>{{scope.row.anInterface.remark}}</b>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="操作" prop="address">
+				<template slot-scope="scope">
+					<el-button @click="" class="c-button" disabled icon="el-icon-edit" type="primary">管理节点
+					</el-button>
+					<el-button @click="" @dis class="c-button" disabled icon="el-icon-delete" type="danger"
+					           v-if="scope.row.lock == false">删除
+					</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
+	</div>
+</div>
+
+<script type="text/javascript">
+    window.app = new Vue({
+        el: '.vue-box',
+        data: {
+            dataList: null,
+        },
+        methods: {
+            loadData: function () {
+                sa.get("/wg/listServer", {
+                    pagesize: 1,
+                    pagenum: 1,
+                }, function (res) {
+                    if (res && res.state && res.data) {
+                        this.dataList = res.data;
+                    }
+                }.bind(this))
+            },
+            newData: function () {
+                layer.open({
+                    type: 2,
+                    title: "新增服务",
+                    moveOut: true, // 是否可拖动到外面
+                    maxmin: true, // 显示最大化按钮
+                    shadeClose: false,
+                    shade: 0,
+                    area: ['80%', '80%'],
+                    content: "/sa-html/wireguard/wireguard_newconfig.html",
+                    // 解决拉伸或者最大化的时候，iframe高度不能自适应的问题
+                    resizing: function (layero) {
+                        $('.layui-layer-iframe').each(function () {
+                            let height = $(this).height();
+                            let title_height = $(this).find('.layui-layer-title').height();
+                            $(this).find('iframe').css('height', (height - title_height) + 'px');
+                        })
+                    },
+                    success: function (layero, index) {
+                        let iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.setData(null);
+                    }
+                });
+            }
+        },
+        mounted: function () {
+            this.loadData();
+            window.loadData = this.loadData;
+        }
+    });
+</script>
+
+
+</body>
+</html>

@@ -40,7 +40,6 @@ public class Swagger2Config {
 	public Docket createRestApi(TypeResolver resolver) {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.apiInfo(apiInfo())
-				.additionalModels(resolver.resolve(WireGuardController.ApplicationProperties.class))
 				.select()
 				.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
 				.paths(PathSelectors.any()) // 可以根据url路径设置哪些请求加入文档，忽略哪些请求

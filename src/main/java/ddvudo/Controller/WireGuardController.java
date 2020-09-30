@@ -5,14 +5,13 @@ import ddvudo.Service.Services.WireGuardService;
 import io.swagger.annotations.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/wg")
 @Api(tags = "wireguard相关服务接口")
 public class WireGuardController {
@@ -33,7 +32,7 @@ public class WireGuardController {
 					}))
 	})
 	public List<WireGuardConfig> generatorNewConfigPair(@RequestBody Map<String, String> params) {
-		String ServerCIDR = params.get("serverCIDR");
+		String ServerCIDR = params.get("ServerCIDR");
 		Integer port = Integer.parseInt(params.get("port"));
 		Integer numberOfClients = Integer.parseInt(params.get("numberOfClients"));
 		String endPoint = params.get("endPoint");
@@ -53,17 +52,10 @@ public class WireGuardController {
 				.newConfigList(ServerCIDR, port, numberOfClients, endPoint, dns, postUpRule, postDownRule, remark);
 	}
 
-	public static class ApplicationProperties {
-
-		private String dns;
-
-		public String getDns() {
-			return dns;
-		}
-
-		public void setDns(String applicationName) {
-			this.dns = applicationName;
-		}
-
+	@GetMapping("/listServer")
+	@ApiOperation("获取服务端列表")
+	public ArrayList<WireGuardConfig> listWireGuardConfig(@RequestParam(defaultValue = "1") int pageNum,
+														  @RequestParam(defaultValue = "10") int pageSize) {
+		return wireGuardService.selectWGServerList(pageNum, pageSize);
 	}
 }

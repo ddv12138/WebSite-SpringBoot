@@ -143,7 +143,7 @@ sa.get = function (url, data, callback) {
     sa.ajax(url, data, "GET", callback);
 };
 sa.post = function (url, data, callback) {
-    sa.ajax(url, data, "POST", callback);
+    sa.ajax(url, JSON.stringify(data), "POST", callback);
 };
 sa.put = function (url, data, callback) {
     sa.ajax(url, data, "PUT", callback);

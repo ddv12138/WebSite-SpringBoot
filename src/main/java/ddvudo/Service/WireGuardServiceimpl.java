@@ -18,6 +18,7 @@ import org.whispersystems.curve25519.Curve25519;
 import org.whispersystems.curve25519.Curve25519KeyPair;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class WireGuardServiceimpl implements WireGuardService {
 	}
 
 	@Override
-	public boolean SaveConfigsTOFiles(List<WireGuardConfig> configList) throws IOException, TemplateException {
+	public List<String> SaveConfigsToFiles(List<WireGuardConfig> configList) throws IOException, TemplateException {
 		Assert.isTrue(StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
 		File configDir = new File(configPath);
 		Assert.isTrue(configDir.isDirectory(), "配置文件夹不存在，请检查是否有wireguard环境");
@@ -66,7 +67,7 @@ public class WireGuardServiceimpl implements WireGuardService {
 			out.flush();
 			res.add(output.toString());
 		}
-		return true;
+		return res;
 	}
 
 	@Override
@@ -119,5 +120,10 @@ public class WireGuardServiceimpl implements WireGuardService {
 			configs.add(peerConfig);
 		}
 		return configs;
+	}
+
+	@Override
+	public ArrayList<WireGuardConfig> selectWGServerList(int pageNum, int pageSize) {
+		return wireGuardConfigMapper.selectWGServerList(pageNum, pageSize);
 	}
 }
