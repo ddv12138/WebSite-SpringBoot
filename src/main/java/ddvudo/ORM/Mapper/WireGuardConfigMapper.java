@@ -19,6 +19,8 @@ public interface WireGuardConfigMapper {
 
 	Interface selectWGInterfaceById(int id);
 
+	ArrayList<Peer> selectWGPeerByInterfaceId(int interfaceId);
+
 	ArrayList<WireGuardConfig> selectWGServerList(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
 }

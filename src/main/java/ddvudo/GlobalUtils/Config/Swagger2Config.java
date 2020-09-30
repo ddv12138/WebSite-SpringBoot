@@ -4,6 +4,8 @@ import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import ddvudo.Controller.WireGuardController;
+import ddvudo.ORM.POJO.WireGuardConfig;
 import io.swagger.annotations.Api;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,9 +37,10 @@ public class Swagger2Config {
 	public static final String VERSION = "1.0.0";
 
 	@Bean
-	public Docket createRestApi() {
+	public Docket createRestApi(TypeResolver resolver) {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.apiInfo(apiInfo())
+				.additionalModels(resolver.resolve(WireGuardController.ApplicationProperties.class))
 				.select()
 				.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
 				.paths(PathSelectors.any()) // 可以根据url路径设置哪些请求加入文档，忽略哪些请求
@@ -49,7 +52,7 @@ public class Swagger2Config {
 				.title("WebSite接口文档") //设置文档的标题
 				.description("WebSite接口和参数文档") // 设置文档的描述
 				.version(VERSION) // 设置文档的版本信息-> 1.0.0 Version information
-				.termsOfServiceUrl("http://ddvudo.xyz") // 设置文档的License信息->1.3 License information
+				.termsOfServiceUrl("http://ddvudo.buzz") // 设置文档的License信息->1.3 License information
 				.build();
 	}
 

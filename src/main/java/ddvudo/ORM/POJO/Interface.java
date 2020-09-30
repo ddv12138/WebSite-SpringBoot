@@ -9,6 +9,15 @@ public class Interface {
 	String postUp;
 	String postDown;
 	String DNS;
+	String remark;
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public Integer getServerId() {
 		return serverId;

@@ -25,15 +25,18 @@ public class WireGuardController {
 	@PostMapping("/genconfig")
 	@ApiOperation("生成wireguard服务端配置和相应数量的客户端配置")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "par", dataTypeClass = Map.class, examples = @Example({
-					@ExampleProperty(value = "{\"dns\":\"114.114.114.114\",\"endPoint\":\"your.domian.address:9003\",\"numberOfClients\":5,\"port\":9003,\"postDownRule\":\"iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE\",\"postUpRule\":\"iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\",\"serverCIDR\":\"10.0.0.0/24\"}", mediaType = "application/json")
-			}))
+			@ApiImplicitParam(name = "params",
+					dataType = "ApplicationProperties",
+					examples = @Example({
+							@ExampleProperty(
+									value = "{\"dns\":\"114.114.114.114\",\"endPoint\":\"your.domian.address:9003\",\"numberOfClients\":5,\"port\":9003,\"postDownRule\":\"iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE\",\"postUpRule\":\"iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\",\"serverCIDR\":\"10.0.0.0/24\"}", mediaType = "application/json")
+					}))
 	})
-	public List<WireGuardConfig> generatorNewConfigPair(@RequestBody Map<String, String> par) {
-		String ServerCIDR = par.get("serverCIDR");
-		Integer port = Integer.parseInt(par.get("port"));
-		Integer numberOfClients = Integer.parseInt(par.get("numberOfClients"));
-		String endPoint = par.get("endPoint");
+	public List<WireGuardConfig> generatorNewConfigPair(@RequestBody Map<String, String> params) {
+		String ServerCIDR = params.get("serverCIDR");
+		Integer port = Integer.parseInt(params.get("port"));
+		Integer numberOfClients = Integer.parseInt(params.get("numberOfClients"));
+		String endPoint = params.get("endPoint");
 
 		Assert.notNull(ServerCIDR, "服务器CIDR地址为空");
 		Assert.notNull(port, "服务器监听端口为空");
@@ -41,11 +44,26 @@ public class WireGuardController {
 		Assert.notNull(endPoint, "客户端使用的服务器端的端点为空");
 		Assert.isTrue(numberOfClients > 0, "客户端数量必须大于0");
 
-		String dns = par.get("dns");
-		String postUpRule = par.get("postUpRule");
-		String postDownRule = par.get("postDownRule");
+		String dns = params.get("dns");
+		String postUpRule = params.get("postUpRule");
+		String postDownRule = params.get("postDownRule");
+		String remark = params.get("remark");
 
 		return wireGuardService
-				.newConfigList(ServerCIDR, port, numberOfClients, endPoint, dns, postUpRule, postDownRule);
+				.newConfigList(ServerCIDR, port, numberOfClients, endPoint, dns, postUpRule, postDownRule, remark);
+	}
+
+	public static class ApplicationProperties {
+
+		private String dns;
+
+		public String getDns() {
+			return dns;
+		}
+
+		public void setDns(String applicationName) {
+			this.dns = applicationName;
+		}
+
 	}
 }

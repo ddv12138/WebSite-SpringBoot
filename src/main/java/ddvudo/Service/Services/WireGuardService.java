@@ -13,5 +13,5 @@ public interface WireGuardService {
 
 	List<WireGuardConfig> newConfigList(String serverCIDR, int port, int numberOfClients, String Endpoint,
 										String ClientDns,
-										String postUpRule, String postDownRule);
+										String postUpRule, String postDownRule, String remark);
 }

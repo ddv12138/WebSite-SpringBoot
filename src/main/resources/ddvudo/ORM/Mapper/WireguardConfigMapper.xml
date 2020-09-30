@@ -14,23 +14,29 @@
             <result property="postDown" column="post_down"/>
             <result property="DNS" column="dns"/>
             <result property="serverId" column="server_id"/>
+            <result property="remark" column="remark"/>
         </association>
-        <!--        <association property="peers" javaType="ddvudo.ORM.POJO.WireGuardConfig$Peer" select="selectWGPeerById">-->
-        <!--        </association>-->
+        <collection property="peers" javaType="java.util.ArrayList" ofType="ddvudo.ORM.POJO.Peer"
+                    select="selectWGPeerByInterfaceId" column="id">
+            <id property="id" column="id"/>
+            <result property="publicKey" column="public_key"/>
+            <result property="allowedIPs" column="allowed_ips"/>
+            <result property="endpoint" column="endpoint"/>
+            <result property="persistentKeepalive" column="persistent_keep_alive"/>
+            <result property="interfaceId" column="interface_id"/>
+        </collection>
     </resultMap>
-    <resultMap id="WGInterfaceResultMap" type="ddvudo.ORM.POJO.Interface">
+    <resultMap id="PeerResultMap" type="ddvudo.ORM.POJO.Peer">
         <id property="id" column="id"/>
-        <result property="privateKey" column="private_key"/>
-        <result property="address" column="address"/>
-        <result property="listenPort" column="listen_port"/>
-        <result property="postUp" column="post_up"/>
-        <result property="postDown" column="post_down"/>
-        <result property="DNS" column="dns"/>
-        <result property="serverId" column="server_id"/>
+        <result property="publicKey" column="public_key"/>
+        <result property="allowedIPs" column="allowed_ips"/>
+        <result property="endpoint" column="endpoint"/>
+        <result property="persistentKeepalive" column="persistent_keep_alive"/>
+        <result property="interfaceId" column="interface_id"/>
     </resultMap>
     <insert id="insertWGInterface" parameterType="ddvudo.ORM.POJO.Interface" keyProperty="id" useGeneratedKeys="true">
-        insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns,server_id)
-        values (#{privateKey},#{address},#{listenPort},#{postUp},#{postDown},#{DNS},#{serverId});
+        insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns,server_id,remark)
+        values (#{privateKey},#{address},#{listenPort},#{postUp},#{postDown},#{DNS},#{serverId},{remark});
     </insert>
     <insert id="insertWGPeer" parameterType="ddvudo.ORM.POJO.Peer" keyProperty="id" useGeneratedKeys="true">
         insert into wireguard_peer(public_key,allowed_ips,endpoint,persistent_keep_alive,interface_id)
@@ -39,8 +45,8 @@
     <select id="selectWGInterfaceById" resultType="ddvudo.ORM.POJO.Interface">
         select * from wireguard_interface where id = #{id}
     </select>
-    <select id="selectWGPeerById" resultType="ddvudo.ORM.POJO.Peer">
-        select * from wireguard_peer where id = #{id}
+    <select id="selectWGPeerByInterfaceId" resultMap="PeerResultMap">
+        select * from wireguard_peer where interface_id = #{interfaceId}
     </select>
     <select id="selectWGServerList" resultMap="BaseResultMap">
         select * from wireguard_interface where server_id is null;

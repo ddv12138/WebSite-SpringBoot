@@ -18,7 +18,7 @@ public class WireGuardConfig {
 		this.id = id;
 	}
 
-	public List<Peer> getPeer() {
+	public List<Peer> getPeers() {
 		return peers;
 	}
 
@@ -30,7 +30,7 @@ public class WireGuardConfig {
 		this.anInterface = anInterface;
 	}
 
-	public void setPeer(List<Peer> peers) {
+	public void setPeers(List<Peer> peers) {
 		this.peers = peers;
 	}
 

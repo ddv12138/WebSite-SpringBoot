@@ -1,12 +1,14 @@
 package ddvudo.ORM.POJO;
 
+import com.alibaba.fastjson.JSON;
+
 public class Peer {
 	Integer interfaceId;
 	Integer id;
-	String PublicKey;
+	String publicKey;
 	String allowedIPs;
-	String Endpoint;
-	Integer PersistentKeepalive;
+	String endpoint;
+	Integer persistentKeepalive;
 
 	public Integer getInterfaceId() {
 		return interfaceId;
@@ -25,38 +27,39 @@ public class Peer {
 	}
 
 	public String getPublicKey() {
-		return PublicKey;
+		return publicKey;
 	}
 
-	public Peer setPublicKey(String publicKey) {
-		PublicKey = publicKey;
-		return this;
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
 
 	public String getAllowedIPs() {
 		return allowedIPs;
 	}
 
-	public Peer setAllowedIPs(String allowedIPs) {
+	public void setAllowedIPs(String allowedIPs) {
 		this.allowedIPs = allowedIPs;
-		return this;
 	}
 
 	public String getEndpoint() {
-		return Endpoint;
+		return endpoint;
 	}
 
-	public Peer setEndpoint(String endpoint) {
-		Endpoint = endpoint;
-		return this;
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
 	}
 
 	public Integer getPersistentKeepalive() {
-		return PersistentKeepalive;
+		return persistentKeepalive;
 	}
 
-	public Peer setPersistentKeepalive(Integer persistentKeepalive) {
-		PersistentKeepalive = persistentKeepalive;
-		return this;
+	public void setPersistentKeepalive(Integer persistentKeepalive) {
+		this.persistentKeepalive = persistentKeepalive;
+	}
+
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
 	}
 }
