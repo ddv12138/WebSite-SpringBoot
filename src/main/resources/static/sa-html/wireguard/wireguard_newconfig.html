@@ -136,8 +136,7 @@
                             let data = JSON.stringify(this.$refs[formName].model);
                             if (!this.isModify) {
                                 //新增时
-                                console.log(this.$refs[formName].model)
-                                sa.post("/wg/genconfig", this.$refs[formName].model, function (data, status, xhr) {
+                                sa.post("/wg/genconfig", data, function (data, status, xhr) {
                                     if (data && data.state) {
                                         layer.alert('添加成功', {icon: 1}, function (index) {
                                             layer.close(index);
