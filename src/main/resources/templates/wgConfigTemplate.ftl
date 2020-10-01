@@ -1,18 +1,18 @@
 <#--@formatter:off-->
 [Interface]
-PrivateKey = ${interface.privateKey}
-Address = ${interface.address}
-<#if interface.listenPort??>
-ListenPort = ${interface.listenPort?c}
+PrivateKey = ${anInterface.privateKey}
+Address = ${anInterface.address}
+<#if anInterface.listenPort??>
+ListenPort = ${anInterface.listenPort?c}
 </#if>
-<#if interface.DNS??>
-DNS = ${interface.DNS}
+<#if anInterface.DNS??>
+DNS = ${anInterface.DNS}
 </#if>
-<#if interface.postUp??>
-PostUp = ${interface.postUp}
+<#if anInterface.postUp??>
+PostUp = ${anInterface.postUp}
 </#if>
-<#if interface.postDown??>
-PostDown = ${interface.postDown}
+<#if anInterface.postDown??>
+PostDown = ${anInterface.postDown}
 </#if>
 
 <#list peers as peer>

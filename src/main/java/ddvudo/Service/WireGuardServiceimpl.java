@@ -8,7 +8,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +24,18 @@ import java.util.List;
 @Service(value = "WireGuardService")
 @Transactional
 public class WireGuardServiceimpl implements WireGuardService {
-	@Autowired
+	final
 	Configuration FreeMarkConfig;
 	@Value("${wireguard.config.dir:/etc/wireguard/}")
 	private String configPath;
-	@Autowired
+	final
 	WireGuardConfigMapper wireGuardConfigMapper;
+
+	public WireGuardServiceimpl(Configuration FreeMarkConfig,
+								WireGuardConfigMapper wireGuardConfigMapper) {
+		this.FreeMarkConfig = FreeMarkConfig;
+		this.wireGuardConfigMapper = wireGuardConfigMapper;
+	}
 
 	@Override
 	public boolean SaveConfigs(List<WireGuardConfig> configs) {
@@ -53,7 +58,7 @@ public class WireGuardServiceimpl implements WireGuardService {
 
 	@Override
 	public List<String> SaveConfigsToFiles(List<WireGuardConfig> configList) throws IOException, TemplateException {
-		Assert.isTrue(StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
+		Assert.isTrue(!StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
 		File configDir = new File(configPath);
 		Assert.isTrue(configDir.isDirectory(), "配置文件夹不存在，请检查是否有wireguard环境");
 		Writer out;
