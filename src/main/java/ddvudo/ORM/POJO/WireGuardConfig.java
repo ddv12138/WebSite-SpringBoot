@@ -6,17 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WireGuardConfig {
-	int id;
 	Interface anInterface = new Interface();
 	List<Peer> peers = new LinkedList<Peer>();
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public List<Peer> getPeers() {
 		return peers;

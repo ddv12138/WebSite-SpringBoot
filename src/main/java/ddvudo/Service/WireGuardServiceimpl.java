@@ -38,7 +38,7 @@ public class WireGuardServiceimpl implements WireGuardService {
 	}
 
 	@Override
-	public boolean SaveConfigs(List<WireGuardConfig> configs) {
+	public boolean saveConfigs(List<WireGuardConfig> configs) {
 		Integer currServerId = null;
 		for (WireGuardConfig config : configs) {
 			if (null != currServerId) {
@@ -129,5 +129,12 @@ public class WireGuardServiceimpl implements WireGuardService {
 	@Override
 	public ArrayList<WireGuardConfig> selectWGServerList(int pageNum, int pageSize) {
 		return wireGuardConfigMapper.selectWGServerList(pageNum, pageSize);
+	}
+
+	@Override
+	public boolean deleteWireGuardConfig(WireGuardConfig config) {
+		int res1 = wireGuardConfigMapper.deleteWireGuardConfigPeersByInterfaceId(config.getAnInterface().getId());
+		int res2 = wireGuardConfigMapper.deleteWireGuardConfigInterface(config.getAnInterface().getId());
+		return res1 > 0 && res2 > 0;
 	}
 }

@@ -80,11 +80,12 @@
         if (!modify) {
             formdata = {
                 ServerCIDR: '10.1.1.1/24',
-                port: '8080',
-                numberOfClients: '',
+                port: 8080,
+                numberOfClients: 1,
                 endPoint: '',
-                postUpRule: '',
-                postDownRule: '',
+                dns: '114.114.114.114',
+                postUpRule: 'iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE',
+                postDownRule: 'iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE',
                 remark: ''
             };
         }

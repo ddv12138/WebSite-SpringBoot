@@ -3,7 +3,6 @@ package ddvudo.Controller;
 import ddvudo.ORM.POJO.WireGuardConfig;
 import ddvudo.Service.Services.WireGuardService;
 import io.swagger.annotations.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,8 +47,13 @@ public class WireGuardController {
 		String postDownRule = params.get("postDownRule");
 		String remark = params.get("remark");
 
-		return wireGuardService
+		List<WireGuardConfig> res = wireGuardService
 				.newConfigList(ServerCIDR, port, numberOfClients, endPoint, dns, postUpRule, postDownRule, remark);
+		if (wireGuardService.saveConfigs(res)) {
+			return res;
+		} else {
+			throw new RuntimeException("wireguard配置保存失败");
+		}
 	}
 
 	@GetMapping("/listServer")
@@ -57,5 +61,11 @@ public class WireGuardController {
 	public ArrayList<WireGuardConfig> listWireGuardConfig(@RequestParam(defaultValue = "1") int pageNum,
 														  @RequestParam(defaultValue = "10") int pageSize) {
 		return wireGuardService.selectWGServerList(pageNum, pageSize);
+	}
+
+	@DeleteMapping
+	@ApiOperation("删除配置")
+	public boolean deleteWireGuardConfig(@RequestBody WireGuardConfig config) {
+		return wireGuardService.deleteWireGuardConfig(config);
 	}
 }

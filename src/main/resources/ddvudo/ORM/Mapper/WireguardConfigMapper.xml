@@ -47,12 +47,18 @@
     </resultMap>
     <insert id="insertWGInterface" parameterType="ddvudo.ORM.POJO.Interface" keyProperty="id" useGeneratedKeys="true">
         insert into wireguard_interface(private_key,address,listen_port,post_up,post_down,dns,server_id,remark)
-        values (#{privateKey},#{address},#{listenPort},#{postUp},#{postDown},#{DNS},#{serverId},{remark});
+        values (#{privateKey},#{address},#{listenPort},#{postUp},#{postDown},#{DNS},#{serverId},#{remark});
     </insert>
     <insert id="insertWGPeer" parameterType="ddvudo.ORM.POJO.Peer" keyProperty="id" useGeneratedKeys="true">
         insert into wireguard_peer(public_key,allowed_ips,endpoint,persistent_keep_alive,interface_id)
         values (#{publicKey},#{allowedIPs},#{endpoint},#{persistentKeepalive},#{interfaceId});
     </insert>
+    <delete id="deleteWireGuardConfigInterface" parameterType="int">
+        delete from wireguard_interface where id = #{interfaceId} or server_id = #{interfaceId};
+    </delete>
+    <delete id="deleteWireGuardConfigPeersByInterfaceId" parameterType="int">
+        delete from wireguard_peer where interface_id = #{interfaceId} or interface_id in (select id From wireguard_interface where id=#{interfaceId} or server_id=#{interfaceId});
+    </delete>
     <select id="selectWGInterfaceById" resultMap="InterfaceResultMap">
         select * from wireguard_interface where id = #{id}
     </select>

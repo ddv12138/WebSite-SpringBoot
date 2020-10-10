@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface WireGuardService {
-	boolean SaveConfigs(List<WireGuardConfig> configList);
+	boolean saveConfigs(List<WireGuardConfig> configList);
 
 	List<String> SaveConfigsToFiles(List<WireGuardConfig> configList) throws IOException, TemplateException;
 
@@ -18,4 +18,6 @@ public interface WireGuardService {
 										String postUpRule, String postDownRule, String remark);
 
 	ArrayList<WireGuardConfig> selectWGServerList(int pageNum, int pageSize);
+
+	boolean deleteWireGuardConfig(WireGuardConfig config);
 }

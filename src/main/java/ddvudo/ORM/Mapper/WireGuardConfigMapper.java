@@ -23,4 +23,7 @@ public interface WireGuardConfigMapper {
 
 	ArrayList<WireGuardConfig> selectWGServerList(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
+	int deleteWireGuardConfigInterface(int interfaceId);
+
+	int deleteWireGuardConfigPeersByInterfaceId(int interfaceId);
 }
