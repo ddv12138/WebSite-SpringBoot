@@ -58,9 +58,9 @@ public class WireGuardServiceimpl implements WireGuardService {
 
 	@Override
 	public List<String> SaveConfigsToFiles(List<WireGuardConfig> configList) throws IOException, TemplateException {
-		Assert.isTrue(!StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
-		File configDir = new File(configPath);
-		Assert.isTrue(configDir.isDirectory(), "配置文件夹不存在，请检查是否有wireguard环境");
+//		Assert.isTrue(!StringUtils.isEmpty(configPath), "配置文件夹路径获取失败");
+//		File configDir = new File(configPath);
+//		Assert.isTrue(configDir.isDirectory(), "配置文件夹不存在，请检查是否有wireguard环境");
 		Writer out;
 		Template template = FreeMarkConfig.getTemplate("wgConfigTemplate.ftl");
 		List<String> res = new LinkedList<>();
