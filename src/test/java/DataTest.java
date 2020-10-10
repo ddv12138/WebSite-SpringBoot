@@ -22,7 +22,6 @@ public class DataTest {
 
 	@Test
 	public void test() throws IOException, TemplateException {
-		Global.Logger(this).info(wireGuardService.SaveConfigsToFiles(wireGuardService
-				.newConfigList("10.1.1.1/24", 9001, 1, "114.123.123.12:9090", "114.114.114.114", null, null, "111")));
+		Global.Logger(this).info(wireGuardConfigMapper.selectWGSubPeerList(101));
 	}
 }

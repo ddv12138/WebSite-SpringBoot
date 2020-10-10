@@ -137,4 +137,9 @@ public class WireGuardServiceimpl implements WireGuardService {
 		int res2 = wireGuardConfigMapper.deleteWireGuardConfigInterface(config.getAnInterface().getId());
 		return res1 > 0 && res2 > 0;
 	}
+
+	@Override
+	public ArrayList<WireGuardConfig> selectWGSubPeerList(int interfaceId) {
+		return wireGuardConfigMapper.selectWGSubPeerList(interfaceId);
+	}
 }

@@ -20,4 +20,6 @@ public interface WireGuardService {
 	ArrayList<WireGuardConfig> selectWGServerList(int pageNum, int pageSize);
 
 	boolean deleteWireGuardConfig(WireGuardConfig config);
+
+	ArrayList<WireGuardConfig> selectWGSubPeerList(int interfaceId);
 }

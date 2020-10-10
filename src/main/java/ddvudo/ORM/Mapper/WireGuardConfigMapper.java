@@ -26,4 +26,6 @@ public interface WireGuardConfigMapper {
 	int deleteWireGuardConfigInterface(int interfaceId);
 
 	int deleteWireGuardConfigPeersByInterfaceId(int interfaceId);
+
+	ArrayList<WireGuardConfig> selectWGSubPeerList(int interfaceId);
 }

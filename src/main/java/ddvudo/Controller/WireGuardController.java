@@ -2,13 +2,13 @@ package ddvudo.Controller;
 
 import ddvudo.ORM.POJO.WireGuardConfig;
 import ddvudo.Service.Services.WireGuardService;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.*;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/wg")
@@ -61,6 +61,18 @@ public class WireGuardController {
 	public ArrayList<WireGuardConfig> listWireGuardConfig(@RequestParam(defaultValue = "1") int pageNum,
 														  @RequestParam(defaultValue = "10") int pageSize) {
 		return wireGuardService.selectWGServerList(pageNum, pageSize);
+	}
+
+	@PostMapping("/listClients")
+	@ApiOperation("获取客户端列表")
+	public List<String> listWireGuardConfig(@RequestBody WireGuardConfig config)
+			throws IOException, TemplateException {
+		List<String> serverStr = wireGuardService.SaveConfigsToFiles(Collections.singletonList(config));
+		int interfaceId = config.getAnInterface().getId();
+		Assert.notNull(interfaceId, "服务端id不能为null");
+		List<WireGuardConfig> clients = wireGuardService.selectWGSubPeerList(interfaceId);
+		serverStr.addAll(wireGuardService.SaveConfigsToFiles(clients));
+		return serverStr;
 	}
 
 	@DeleteMapping

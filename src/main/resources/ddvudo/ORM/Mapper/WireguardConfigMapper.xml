@@ -68,4 +68,7 @@
     <select id="selectWGServerList" resultMap="BaseResultMap">
         select * from wireguard_interface where server_id is null;
     </select>
+    <select id="selectWGSubPeerList" parameterType="int" resultMap="BaseResultMap">
+        select * from wireguard_interface where server_id = #{interfaceId};
+    </select>
 </mapper>

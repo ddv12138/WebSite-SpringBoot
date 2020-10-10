@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>服务列表</title>
+	<meta charset="utf-8">
+	<meta content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+	      name="viewport"/>
+
+	<!-- 所有的 css 资源 -->
+	<link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+	<link href="../../res/sa.css" rel="stylesheet">
+
+	<!-- 所有的 js 资源 -->
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+	<script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
+	<script src="../../res/kj/laydate/laydate.js"></script>
+	<script src="../../res/sa.js"></script>
+
+	<style type="text/css">
+        .config-pre {
+            background-color: black;
+            color: white;
+            padding: 3vh;
+            font-family: sans-serif;
+        }
+	</style>
+
+</head>
+<body>
+
+<!-- 防止margin向下击穿 -->
+<div style="margin-top: -1em;"><br></div>
+
+<div :style="'display: block;'" class="vue-box" style="display: none;">
+	<el-card :key="str" class="box-card" v-for="(str,index) in wgData">
+		<div class="clearfix" slot="header">
+			<span>{{"节点" + (index + 1)}}</span>
+		</div>
+		<pre class="config-pre">{{str}}</pre>
+	</el-card>
+</div>
+
+<script type="text/javascript">
+    window.setData = function (data) {
+        if (!data) {
+
+        }
+
+        window.app = new Vue({
+            el: '.vue-box',
+            data: {
+                dataList: null,
+                wgData: null,
+            },
+            methods: {
+                loadData: function () {
+                    sa.post("/wg/listClients", JSON.stringify(data), function (res) {
+                        if (res && res.state && res.data) {
+                            this.wgData = res.data;
+                        }
+                    }.bind(this))
+                }
+            },
+            mounted: function () {
+                this.loadData();
+                window.loadData = this.loadData;
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

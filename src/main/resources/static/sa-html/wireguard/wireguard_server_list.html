@@ -83,7 +83,7 @@
 			</el-table-column>
 			<el-table-column label="操作" prop="address">
 				<template slot-scope="scope">
-					<el-button @click="" class="c-button" disabled icon="el-icon-edit" type="primary">管理节点
+					<el-button @click="showInfo(scope.row)" class="c-button" icon="el-icon-edit" type="primary">详情
 					</el-button>
 					<el-button @click="deleteConfig(scope.row)" class="c-button" icon="el-icon-delete" type="danger">删除
 					</el-button>
@@ -140,6 +140,30 @@
                         this.loadData();
                     }
                 }.bind(this))
+            },
+            showInfo: function (arg) {
+                layer.open({
+                    type: 2,
+                    title: "服务详情",
+                    moveOut: true, // 是否可拖动到外面
+                    maxmin: true, // 显示最大化按钮
+                    shadeClose: false,
+                    shade: 0,
+                    area: ['80%', '80%'],
+                    content: "/sa-html/wireguard/wireguard_server_info.html",
+                    // 解决拉伸或者最大化的时候，iframe高度不能自适应的问题
+                    resizing: function (layero) {
+                        $('.layui-layer-iframe').each(function () {
+                            let height = $(this).height();
+                            let title_height = $(this).find('.layui-layer-title').height();
+                            $(this).find('iframe').css('height', (height - title_height) + 'px');
+                        })
+                    },
+                    success: function (layero, index) {
+                        let iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.setData(arg);
+                    }
+                });
             }
         },
         mounted: function () {
