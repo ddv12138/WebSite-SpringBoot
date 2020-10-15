@@ -180,7 +180,7 @@ public class CommunityServiceImpl implements CommunityService {
 					it.remove();
 					continue;
 				}
-				community.setUuid(tmp.getUuid());
+//				community.setUuid(tmp.getUuid());
 				community.setCity_id(district.getCity_id());
 				community.setCity_name(district.getCity_name());
 				community.setDistrict_id(district.getId() + "");
