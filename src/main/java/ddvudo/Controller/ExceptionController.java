@@ -29,4 +29,5 @@ public class ExceptionController {
 	public Boolean getMapperException() {
 		return exceptionService.getMapperException();
 	}
+
 }

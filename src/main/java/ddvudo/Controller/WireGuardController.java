@@ -80,4 +80,9 @@ public class WireGuardController {
 	public boolean deleteWireGuardConfig(@RequestBody WireGuardConfig config) {
 		return wireGuardService.deleteWireGuardConfig(config);
 	}
+
+	@GetMapping("/hello")
+	public String helloWorld() {
+		return "hello World!!";
+	}
 }
