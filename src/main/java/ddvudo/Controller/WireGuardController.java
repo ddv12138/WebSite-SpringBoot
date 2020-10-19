@@ -83,6 +83,6 @@ public class WireGuardController {
 
 	@GetMapping("/hello")
 	public String helloWorld() {
-		return "hello World!!";
+		return "hello World!";
 	}
 }
