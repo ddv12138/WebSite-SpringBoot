@@ -30,6 +30,7 @@ public class SecurityConfig<S extends Session>
 	private static final String[] AUTH_WHITELIST = new String[]{
 			"/user/login",
 			"/user/logout", "/",
+			"/wg/hello",
 			"/swagger-resources/**",
 			"/swagger-ui.html",
 			"/v2/api-docs",
