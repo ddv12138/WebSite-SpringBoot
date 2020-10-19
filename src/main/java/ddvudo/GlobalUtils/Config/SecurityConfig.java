@@ -28,8 +28,9 @@ public class SecurityConfig<S extends Session>
 	RestLogoutSuccessHandler restLogoutSuccessHandler;
 
 	private static final String[] AUTH_WHITELIST = new String[]{
+			"/",
 			"/user/login",
-			"/user/logout", "/",
+			"/user/logout",
 			"/wg/hello",
 			"/swagger-resources/**",
 			"/swagger-ui.html",
