@@ -39,6 +39,8 @@ public interface EnterpriseRegistrationMapper {
 
 	List<EnterpriseRegistration> selectByExample(EnterpriseRegistrationExample example);
 
+	List<EnterpriseRegistration> selectList();
+
 	/**
 	 * select by primary key
 	 *

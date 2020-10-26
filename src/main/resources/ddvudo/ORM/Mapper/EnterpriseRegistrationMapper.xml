@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="ddvudo.ORM.POJO.EnterpriseRegistration">
     <!--@mbg.generated-->
     <!--@Table enterprise_registration-->
-    <id column="Id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="regday" jdbcType="VARCHAR" property="regday" />
@@ -78,8 +77,8 @@
   </sql>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    Id, "name", code, regday, "character", legalRepresentative, capital, businessScope, 
-    province, city, address
+    "Id", "name", code, regday, "character", "legalRepresentative", "capital", "businessScope",
+    "province", "city", "address"
   </sql>
   <select id="selectByExample" parameterType="ddvudo.ORM.POJO.EnterpriseRegistrationExample" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -87,26 +86,31 @@
     <if test="distinct">
       distinct
     </if>
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     from enterprise_registration
     <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
+      <include refid="Example_Where_Clause"/>
     </if>
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    from enterprise_registration
+    order by "Id";
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
+    select
+    <include refid="Base_Column_List"/>
     from enterprise_registration
-    where Id = #{id,jdbcType=VARCHAR}
+    where `Id` = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
     delete from enterprise_registration
-    where Id = #{id,jdbcType=VARCHAR}
+    where `Id` = #{id,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="ddvudo.ORM.POJO.EnterpriseRegistrationExample">
     <!--@mbg.generated-->
