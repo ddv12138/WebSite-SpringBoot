@@ -8,4 +8,9 @@
         from House
         where houseId = #{houseId};
     </select>
+    <select id="selectList" resultType="ddvudo.ORM.POJO.House">
+        select *
+        from house
+        order by "houseId";
+    </select>
 </mapper>
