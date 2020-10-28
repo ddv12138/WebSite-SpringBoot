@@ -313,14 +313,23 @@
     update enterprise_registration
     set "name" = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
-      regday = #{regday,jdbcType=VARCHAR},
-      "character" = #{character,jdbcType=VARCHAR},
-      legalRepresentative = #{legalrepresentative,jdbcType=VARCHAR},
-      capital = #{capital,jdbcType=VARCHAR},
-      businessScope = #{businessscope,jdbcType=VARCHAR},
-      province = #{province,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR}
+    regday = #{regday,jdbcType=VARCHAR},
+    "character" = #{character,jdbcType=VARCHAR},
+    legalRepresentative = #{legalrepresentative,jdbcType=VARCHAR},
+    capital = #{capital,jdbcType=VARCHAR},
+    businessScope = #{businessscope,jdbcType=VARCHAR},
+    province = #{province,jdbcType=VARCHAR},
+    city = #{city,jdbcType=VARCHAR},
+    address = #{address,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="selectCursor" resultType="java.lang.String" parameterType="java.lang.String" statementType="CALLABLE">
+    {call reffunc('${cursor,mode=IN}')}
+  </select>
+  <select id="fetchNext" resultType="ddvudo.ORM.POJO.EnterpriseRegistration" statementType="CALLABLE">
+    FETCH ABSOLUTE ${count} from ${cursor};
+  </select>
+  <select id="fetchNext2" resultType="ddvudo.ORM.POJO.EnterpriseRegistration" statementType="CALLABLE">
+    FETCH 1 from ${cursor};
+  </select>
 </mapper>

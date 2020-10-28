@@ -8,9 +8,10 @@
         from House
         where houseId = #{houseId};
     </select>
-    <select id="selectList" resultType="ddvudo.ORM.POJO.House">
-        select *
-        from house
-        order by "houseId";
+    <select id="selectCursor" resultType="java.lang.String" parameterType="String" statementType="CALLABLE">
+        {call reffunc('${cursor,mode=IN}')}
+    </select>
+    <select id="fetchNext" resultType="ddvudo.ORM.POJO.House" parameterType="String">
+        FETCH 1 from ${cursor};
     </select>
 </mapper>

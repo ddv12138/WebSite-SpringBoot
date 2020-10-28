@@ -1,5 +1,7 @@
 package ddvudo.ORM.POJO;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.Date;
 
 public class House {
@@ -503,4 +505,8 @@ public class House {
 		this.ctime = ctime;
 	}
 
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
+	}
 }

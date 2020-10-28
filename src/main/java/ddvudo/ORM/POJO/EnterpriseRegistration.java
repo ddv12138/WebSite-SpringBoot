@@ -1,5 +1,6 @@
 package ddvudo.ORM.POJO;
 
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -129,22 +130,6 @@ public class EnterpriseRegistration {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName());
-		sb.append(" [");
-		sb.append("Hash = ").append(hashCode());
-		sb.append(", id=").append(id);
-		sb.append(", name=").append(name);
-		sb.append(", code=").append(code);
-		sb.append(", regday=").append(regday);
-		sb.append(", character=").append(character);
-		sb.append(", legalrepresentative=").append(legalrepresentative);
-		sb.append(", capital=").append(capital);
-		sb.append(", businessscope=").append(businessscope);
-		sb.append(", province=").append(province);
-		sb.append(", city=").append(city);
-		sb.append(", address=").append(address);
-		sb.append("]");
-		return sb.toString();
+		return JSON.toJSONString(this);
 	}
 }

@@ -2,12 +2,15 @@ package ddvudo.ORM.Mapper;
 
 import ddvudo.ORM.POJO.EnterpriseRegistration;
 import ddvudo.ORM.POJO.EnterpriseRegistrationExample;
+import ddvudo.ORM.POJO.House;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface EnterpriseRegistrationMapper {
 	long countByExample(EnterpriseRegistrationExample example);
 
@@ -70,4 +73,10 @@ public interface EnterpriseRegistrationMapper {
 	 * @return update count
 	 */
 	int updateByPrimaryKey(EnterpriseRegistration record);
+
+	String selectCursor(String cursor);
+
+	EnterpriseRegistration fetchNext(@Param("cursor") String cursor, @Param("count") int count);
+
+	EnterpriseRegistration fetchNext2(@Param("cursor") String cursor);
 }
