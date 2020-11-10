@@ -25,7 +25,7 @@ public class EnterpriseController {
 
 	@RequestMapping("/transDataToEs")
 	public boolean transDataToEs() {
-		task.doTask();
+		new Thread(() -> task.doTask()).start();
 		return true;
 	}
 }
