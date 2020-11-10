@@ -67,7 +67,6 @@ public class LianjiaDataTask {
 					community.setGaode_lng(res.getString("locations").split(",")[0]);
 					community.setGaode_lat(res.getString("locations").split(",")[1]);
 					communityService.updateOneLoc(community);
-					Global.Logger().info(communities.size() + "/" + communities.indexOf(community));
 				}
 			}
 		}

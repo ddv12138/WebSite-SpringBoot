@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import ddvudo.ORM.POJO.EnterpriseRegistration;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.elasticsearch.action.index.IndexRequest;
@@ -52,7 +53,11 @@ public class ElasticSearchTask {
 		TransactionStatus status = transactionManager.getTransaction(def);
 		Global.Logger().info(enterpriseRegistrationMapper.selectCursor("test"));
 		EnterpriseRegistration enterprise;
+		String lastIndexStr = redisTemplate.opsForValue().get("currentESIndex");
 		int index = 1;
+		if (!StringUtils.isEmpty(lastIndexStr)) {
+			index = Integer.parseInt(lastIndexStr) - 1;
+		}
 		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index))) {
 			try {
 				Global.Logger().trace(JSON.toJSONString(enterprise));
@@ -63,7 +68,7 @@ public class ElasticSearchTask {
 				client.index(request, RequestOptions.DEFAULT);
 				redisTemplate.opsForValue().set("currentESIndex", index + "");
 				index += 1;
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Global.Logger().error(e);
 			}
 		}
