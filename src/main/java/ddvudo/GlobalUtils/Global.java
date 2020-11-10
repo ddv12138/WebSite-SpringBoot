@@ -17,7 +17,7 @@ public class Global {
 
 
 	public static Logger Logger() {
-		return LogManager.getLogger(new Throwable().getStackTrace()[1].getClass());
+		return LogManager.getLogger(new Throwable().getStackTrace()[1].getClassName());
 	}
 
 	public static String postHTTPRequest(String linkUrl, HashMap<String, String> headers, int retry) {

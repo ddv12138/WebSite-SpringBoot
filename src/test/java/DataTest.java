@@ -68,7 +68,7 @@ public class DataTest {
 //			Global.Logger(this).info(JSON.toJSONString(res));
 //		}
 //		transactionManager.commit(status);
-
+		Global.Logger().info("hello");
 
 //		Cursor<Object> cursor = null;
 //		SqlSession sqlSession = null;

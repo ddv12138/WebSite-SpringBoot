@@ -27,12 +27,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-@Profile("server")
 @Component
 public class ElasticSearchTask {
 	private static final String ELASTICSEARCH_URL = "127.0.0.1";
 	private static final short ELASTICSEARCH_PORT = 9200;
-	private static final short MAX_POOL_SIZE = 500;
 	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
 	@Resource
