@@ -1,22 +1,31 @@
 package ddvudo.Controller;
 
+import ddvudo.ScheduledTask.ElasticSearchTask;
 import ddvudo.Service.Services.EnterpriseRegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 
-@Controller
+@RestController
 @RequestMapping("/enterprise")
 public class EnterpriseController {
-
-	EnterpriseRegistrationService service;
+	@Autowired
+	ElasticSearchTask task;
 
 	@RequestMapping("/getEnterpriseList")
 	@ResponseBody
 	public HashMap<String, String> listEnterprise(@RequestBody HashMap<String, String> pars) {
 		return pars;
+	}
+
+	@RequestMapping("/transDataToEs")
+	public boolean transDataToEs() {
+		task.doTask();
+		return true;
 	}
 }
