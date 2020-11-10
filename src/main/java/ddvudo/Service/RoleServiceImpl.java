@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<Role> listRole() {
-		Global.Logger(this).info(mapper.toString());
+		Global.Logger().info(mapper.toString());
 		return mapper.listRole();
 	}
 
@@ -74,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<Role> listRoleByUser(Integer userid) {
-		Global.Logger(this).info(mapper.toString());
+		Global.Logger().info(mapper.toString());
 		User user = userMapper.selectById(userid);
 		Assert.notNull(user, "用户不存在");
 		return mapper.listRoleByUser(user);

@@ -11,6 +11,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.Glob;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -51,19 +52,21 @@ public class ElasticSearchTask {
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		// 4.获得事务状态
 		TransactionStatus status = transactionManager.getTransaction(def);
-		Global.Logger(this).info(enterpriseRegistrationMapper.selectCursor("test"));
+		Global.Logger().info(enterpriseRegistrationMapper.selectCursor("test"));
 		EnterpriseRegistration enterprise;
 		int index = 1;
 		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index))) {
 			try {
+				Global.Logger().trace(JSON.toJSONString(enterprise));
+				redisTemplate.opsForValue().set("lastResult", JSON.toJSONString(enterprise));
 				IndexRequest request = new IndexRequest().id(String.valueOf(enterprise.getId())).type("_doc")
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
-				IndexResponse res = client.index(request, RequestOptions.DEFAULT);
-				index += 1;
+				client.index(request, RequestOptions.DEFAULT);
 				redisTemplate.opsForValue().set("currentESIndex", index + "");
+				index += 1;
 			} catch (IOException e) {
-				Global.Logger(this).error(e);
+				Global.Logger().error(e);
 			}
 		}
 		transactionManager.commit(status);

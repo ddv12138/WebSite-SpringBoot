@@ -136,7 +136,8 @@ public class CommunityServiceImpl implements CommunityService {
 			for (int i = 0; i < squares.size(); i++) {
 				String time_13 = new Date().getTime() + "";
 				BigDecimal[] square = squares.get(i);
-				Global.Logger(this).info("正在处理行政区划(" + district.getCity_name() + "_" + district.getName() + ")下小区信息（" + (i + 1) + "/" + squares.size() + ")");
+				Global.Logger().trace("正在处理行政区划(" + district.getCity_name() + "_" + district
+						.getName() + ")下小区信息（" + (i + 1) + "/" + squares.size() + ")");
 				HashMap<String, String> dict = new LinkedHashMap<>();
 				dict.put("group_type", "community");
 				dict.put("city_id", district.getCity_id());
@@ -159,7 +160,7 @@ public class CommunityServiceImpl implements CommunityService {
 			communityMapper.bathInsertList(communityList);
 			this.setLastUpdateTime(district);
 		} catch (Exception e) {
-			Global.Logger(this).error(e);
+			Global.Logger().error(e);
 			e.printStackTrace();
 		}
 		return communityList;
@@ -189,29 +190,29 @@ public class CommunityServiceImpl implements CommunityService {
 			}
 			return communityList;
 		} catch (ClassCastException e) {
-			Global.Logger(this).error(e);
-		}
-		Map<String, JSONObject> communityMap = res.getJSONObject("data").getJSONObject("list").toJavaObject(Map.class);
-		for (JSONObject communityObj : communityMap.values()) {
-			Community community = communityObj.toJavaObject(Community.class);
-			if (null != this.selectByName(community.getName())
-					|| !isCommunityInDistrict(community, district)) {
-				continue;
-			}
-			community.setCity_id(district.getCity_id());
-			community.setCity_name(district.getCity_name());
-			community.setDistrict_id(district.getId() + "");
-			community.setDistrict_name(district.getName());
+			Map<String, JSONObject> communityMap = res.getJSONObject("data").getJSONObject("list")
+					.toJavaObject(Map.class);
+			for (JSONObject communityObj : communityMap.values()) {
+				Community community = communityObj.toJavaObject(Community.class);
+				if (null != this.selectByName(community.getName())
+						|| !isCommunityInDistrict(community, district)) {
+					continue;
+				}
+				community.setCity_id(district.getCity_id());
+				community.setCity_name(district.getCity_name());
+				community.setDistrict_id(district.getId() + "");
+				community.setDistrict_name(district.getName());
 
-			try {
-				getGaoDeLoc(community);
-				communityList.add(community);
-			} catch (Exception e) {
-				Global.Logger(this).error(e);
-				continue;
+				try {
+					getGaoDeLoc(community);
+					communityList.add(community);
+				} catch (Exception e1) {
+					Global.Logger().error(e1);
+					continue;
+				}
 			}
+			return communityList;
 		}
-		return communityList;
 	}
 
 	public void getGaoDeLoc(Community community) {
@@ -229,7 +230,7 @@ public class CommunityServiceImpl implements CommunityService {
 				community.setGaode_lat(httpres.getString("locations").split(",")[1]);
 			}
 		} catch (Exception e) {
-			Global.Logger(this).error(e);
+			Global.Logger().error(e);
 			e.printStackTrace();
 		}
 	}
@@ -237,7 +238,7 @@ public class CommunityServiceImpl implements CommunityService {
 	public boolean JSONResultCheck(JSONObject res) {
 		if (null == res || res.isEmpty() || res.getIntValue("errno") != 0) {
 			if (null != res && !res.isEmpty()) {
-				Global.Logger(this).error(res.getString("error"));
+				Global.Logger().error(res.getString("error"));
 			}
 			return false;
 		}

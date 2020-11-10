@@ -22,7 +22,7 @@ public class PointCut {
 		StringBuilder sb = new StringBuilder();
 		sb.append("调用" + cutType + ":" + joinPoint.getSignature().getName() + ",");
 		sb.append("耗时：" + (end - start) + "ms" + "");
-		Global.Logger(joinPoint.getThis()).info(sb.toString());
+		Global.Logger().info(sb.toString());
 		return obj;
 	}
 }

@@ -16,8 +16,8 @@ import java.util.HashMap;
 public class Global {
 
 
-	public static Logger Logger(Object obj) {
-		return LogManager.getLogger(obj);
+	public static Logger Logger() {
+		return LogManager.getLogger(new Throwable().getStackTrace()[1].getClass());
 	}
 
 	public static String postHTTPRequest(String linkUrl, HashMap<String, String> headers, int retry) {
@@ -51,23 +51,23 @@ public class Global {
 			String resStr = result.substring(result.indexOf("{"), result.lastIndexOf(")"));
 			JSONObject res = JSON.parseObject(resStr);
 			if (null != res && !res.isEmpty() && res.getIntValue("errno") == 10001 && res.getString("error").contains("data")) {
-				Global.Logger(Global.class).error("被封ip");
+				Global.Logger().error("被封ip");
 				if (retry > 0) {
-					Global.Logger(Global.class).error("重新连接");
+					Global.Logger().error("重新连接");
 					retry = retry - 1;
 					postHTTPRequest(linkUrl, headers, retry);
 				}
 			}
 			return resStr;
 		} catch (Exception e) {
-			Global.Logger(Global.class).error(e);
-			Global.Logger(Global.class).info("连接失败");
+			Global.Logger().error(e);
+			Global.Logger().info("连接失败");
 			if (null != connection) {
 				connection.disconnect();
 				connection = null;
 			}
 			if (retry > 0) {
-				Global.Logger(Global.class).error("重新连接");
+				Global.Logger().error("重新连接");
 				retry = retry - 1;
 				return postHTTPRequest(linkUrl, headers, retry);
 			}
@@ -111,7 +111,7 @@ public class Global {
 				result = sbf.toString();
 			}
 		} catch (Exception e) {
-			Global.Logger(Global.class).error(e);
+			Global.Logger().error(e);
 			e.printStackTrace();
 		} finally {
 			// 关闭资源
@@ -162,9 +162,9 @@ public class Global {
 			try (FileOutputStream fos = new FileOutputStream(file)) {
 				fos.write(getData);
 			}
-			Global.Logger(Global.class).info("info:" + url + " download success");
+			Global.Logger().info("info:" + url + " download success");
 		} catch (Exception e) {
-			Global.Logger(Global.class).error(e);
+			Global.Logger().error(e);
 		}
 	}
 
