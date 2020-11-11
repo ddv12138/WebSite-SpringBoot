@@ -59,6 +59,7 @@ public class ElasticSearchTask {
 		}
 		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index))) {
 			try {
+				long start = System.currentTimeMillis();
 				Global.Logger().trace(JSON.toJSONString(enterprise));
 				redisTemplate.opsForValue().set("lastResult", JSON.toJSONString(enterprise));
 				IndexRequest request = new IndexRequest().id(String.valueOf(enterprise.getId())).type("_doc")
@@ -66,6 +67,7 @@ public class ElasticSearchTask {
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
 				redisTemplate.opsForValue().set("currentESIndex", index + "");
+				redisTemplate.opsForValue().set("lastESLoopTime", String.valueOf(System.currentTimeMillis() - start));
 				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);
