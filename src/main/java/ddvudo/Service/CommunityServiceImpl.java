@@ -238,7 +238,7 @@ public class CommunityServiceImpl implements CommunityService {
 	public boolean JSONResultCheck(JSONObject res) {
 		if (null == res || res.isEmpty() || res.getIntValue("errno") != 0) {
 			if (null != res && !res.isEmpty()) {
-				Global.Logger().error(res.getString("error"));
+				Global.Logger().trace(res.getString("error"));
 			}
 			return false;
 		}
