@@ -65,9 +65,9 @@ public class ElasticSearchTask {
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
+				index += 1;
 				redisTemplate.opsForValue().set("currentESIndexAndLastESLoopTime", index + "#" + (System
 						.currentTimeMillis() - start));
-				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);
 			}
