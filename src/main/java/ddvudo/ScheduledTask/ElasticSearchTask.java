@@ -34,14 +34,13 @@ public class ElasticSearchTask {
 	private static final short ELASTICSEARCH_PORT = 9200;
 	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
-	@Resource
+	@Autowired
 	RedisTemplate<String, String> redisTemplate;
 	@Autowired
 	EnterpriseRegistrationMapper enterpriseRegistrationMapper;
 	// 1.获取事务控制管理器
 	@Autowired
 	private DataSourceTransactionManager transactionManager;
-	long count = 0;
 
 	//	@Scheduled(fixedDelay = 1000L * 60L * 60L * 24L * 30L)
 	public void doTask() {
