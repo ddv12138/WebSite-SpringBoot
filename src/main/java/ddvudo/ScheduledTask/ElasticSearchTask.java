@@ -6,27 +6,18 @@ import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import ddvudo.ORM.POJO.EnterpriseRegistration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.Glob;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class ElasticSearchTask {
@@ -52,10 +43,10 @@ public class ElasticSearchTask {
 		TransactionStatus status = transactionManager.getTransaction(def);
 		Global.Logger().info(enterpriseRegistrationMapper.selectCursor("test"));
 		EnterpriseRegistration enterprise;
-		String lastIndexStr = redisTemplate.opsForValue().get("currentESIndex");
+		String lastIndexStr = redisTemplate.opsForValue().get("currentESIndexAndLastESLoopTime");
 		int index = 1;
 		if (!StringUtils.isEmpty(lastIndexStr)) {
-			index = Integer.parseInt(lastIndexStr) - 1;
+			index = Integer.parseInt(lastIndexStr.split("#")[0]) - 1;
 		}
 		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index))) {
 			try {
