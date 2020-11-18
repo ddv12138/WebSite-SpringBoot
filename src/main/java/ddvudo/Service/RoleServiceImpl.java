@@ -25,7 +25,6 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<Role> listRole() {
-		Global.Logger().info(mapper.toString());
 		return mapper.listRole();
 	}
 
