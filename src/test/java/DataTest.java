@@ -1,40 +1,18 @@
-import com.alibaba.fastjson.JSON;
 import ddvudo.Application;
-import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
-import ddvudo.ORM.Mapper.HouseMapper;
-import ddvudo.ORM.Mapper.IconMapper;
-import ddvudo.ORM.Mapper.WireGuardConfigMapper;
-import ddvudo.ORM.POJO.EnterpriseRegistration;
-import ddvudo.ORM.POJO.EnterpriseRegistrationExample;
-import ddvudo.ORM.POJO.House;
-import ddvudo.Service.Services.WireGuardService;
-import freemarker.template.TemplateException;
 import org.apache.http.HttpHost;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.SqlSession;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.Glob;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.jasypt.encryption.StringEncryptor;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 @SpringBootTest(classes = Application.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,6 +27,8 @@ public class DataTest {
 	private static final short ELASTICSEARCH_PORT = 9200;
 	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
+	@Autowired
+	StringEncryptor encryptor;
 
 	@Test
 	public void test() throws IOException {
@@ -68,7 +48,20 @@ public class DataTest {
 //			Global.Logger(this).info(JSON.toJSONString(res));
 //		}
 //		transactionManager.commit(status);
-		Global.Logger().info("hello");
+		String url = encryptor.encrypt(
+				"jdbc:postgresql://127.0.0.1:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8");
+		String name = encryptor.encrypt("postgres");
+		String password = encryptor.encrypt("liukang951006");
+		System.out.println("----------------");
+		System.out.println(url);
+		System.out.println(name);
+		System.out.println(password);
+		System.out.println(encryptor.encrypt("194.156.133.226"));
+		System.out.println(encryptor.encrypt("6379"));
+		System.out.println(encryptor.encrypt(
+				"jdbc:postgresql://localhost:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8"));
+		Assert.assertTrue(name.length() > 0);
+		Assert.assertTrue(password.length() > 0);
 
 //		Cursor<Object> cursor = null;
 //		SqlSession sqlSession = null;
