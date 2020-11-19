@@ -34,7 +34,6 @@ public class DataTest {
 	StringEncryptor encryptor;
 	@Autowired
 	RedisTemplate<String, String> redisTemplate;
-
 	@Test
 	public void test() throws IOException, InterruptedException {
 //		// 2.获取事务定义
@@ -82,11 +81,5 @@ public class DataTest {
 //			Global.Logger(this).info(e);
 //		});
 //		cursor.close();
-//		while (true){
-//			int start = Integer.parseInt(Objects.requireNonNull(redisTemplate.opsForValue().get("ESTotal")));
-//			Thread.sleep(2000);
-//			int speed = (Integer.parseInt(Objects.requireNonNull(redisTemplate.opsForValue().get("ESTotal")))-start)/2;
-//			Global.Logger().info("Speed:"+speed+"/s,Remain:"+(5888628/speed/60/60)+" hours");
-//		}
 	}
 }
