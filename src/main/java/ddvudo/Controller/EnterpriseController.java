@@ -36,7 +36,7 @@ public class EnterpriseController {
 		for (int i = 0; i < coreSize; i++) {
 			int start = ((dataPreThread * i) + 1);
 			int end = Math.min(((dataPreThread * i) + dataPreThread), totalSIze);
-			pool.submit(() -> task.doTask(start, end));
+			pool.execute(() -> task.doTask(start, end));
 		}
 		return true;
 	}
