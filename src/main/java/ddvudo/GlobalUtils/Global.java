@@ -163,8 +163,6 @@ public class Global {
 				fos.write(getData);
 			}
 			Global.Logger().info("info:" + url + " download success");
-		} catch (Exception e) {
-			Global.Logger().error(e);
 		}
 	}
 

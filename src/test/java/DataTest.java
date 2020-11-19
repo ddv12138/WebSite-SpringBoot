@@ -10,10 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @SpringBootTest(classes = Application.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,9 +32,11 @@ public class DataTest {
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
 	@Autowired
 	StringEncryptor encryptor;
+	@Autowired
+	RedisTemplate<String, String> redisTemplate;
 
 	@Test
-	public void test() throws IOException {
+	public void test() throws IOException, InterruptedException {
 //		// 2.获取事务定义
 //		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 //		// 3.设置事务隔离级别，开启新事务
@@ -78,5 +82,11 @@ public class DataTest {
 //			Global.Logger(this).info(e);
 //		});
 //		cursor.close();
+//		while (true){
+//			int start = Integer.parseInt(Objects.requireNonNull(redisTemplate.opsForValue().get("ESTotal")));
+//			Thread.sleep(2000);
+//			int speed = (Integer.parseInt(Objects.requireNonNull(redisTemplate.opsForValue().get("ESTotal")))-start)/2;
+//			Global.Logger().info("Speed:"+speed+"/s,Remain:"+(5888628/speed/60/60)+" hours");
+//		}
 	}
 }
