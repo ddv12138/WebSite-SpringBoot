@@ -42,7 +42,7 @@ public class ElasticSearchTask {
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		// 4.获得事务状态
 		TransactionStatus status = transactionManager.getTransaction(def);
-		String cursorName = enterpriseRegistrationMapper.selectCursor(Thread.currentThread().getName());
+		String cursorName = enterpriseRegistrationMapper.selectCursor("test");
 		EnterpriseRegistration enterprise;
 		String lastIndexStr = redisTemplate.opsForValue().get(Thread.currentThread().getName());
 		int index = start;
