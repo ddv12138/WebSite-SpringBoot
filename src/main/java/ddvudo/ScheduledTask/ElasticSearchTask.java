@@ -25,6 +25,7 @@ public class ElasticSearchTask {
 	private static final short ELASTICSEARCH_PORT = 9200;
 	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
+	private static final String totalRedisKey = "ESTotal";
 	@Autowired
 	RedisTemplate<String, String> redisTemplate;
 	@Autowired
@@ -57,8 +58,13 @@ public class ElasticSearchTask {
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
-				redisTemplate.opsForValue()
-						.set(Thread.currentThread().getName(), index + "-" + (System.currentTimeMillis() - startTime));
+				int finalIndex = index;
+				String threadKey = Thread.currentThread().getName();
+				new Thread(() -> {
+					redisTemplate.opsForValue()
+							.set(threadKey, finalIndex + "-" + (System.currentTimeMillis() - startTime));
+					redisTemplate.opsForValue().increment(totalRedisKey);
+				}).start();
 				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);
