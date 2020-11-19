@@ -34,30 +34,30 @@ public class ElasticSearchTask {
 	private DataSourceTransactionManager transactionManager;
 
 	//	@Scheduled(fixedDelay = 1000L * 60L * 60L * 24L * 30L)
-	public void doTask() {
+	public void doTask(int start, int end) {
+		Thread.currentThread().setName("currentESIndexAndLastESLoopTime#" + start + "#" + end);
 		// 2.获取事务定义
 		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 		// 3.设置事务隔离级别，开启新事务
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		// 4.获得事务状态
 		TransactionStatus status = transactionManager.getTransaction(def);
-		Global.Logger().info(enterpriseRegistrationMapper.selectCursor("test"));
 		EnterpriseRegistration enterprise;
-		String lastIndexStr = redisTemplate.opsForValue().get("currentESIndexAndLastESLoopTime");
-		int index = 1;
+		String lastIndexStr = redisTemplate.opsForValue().get(Thread.currentThread().getName());
+		int index = start;
 		if (!StringUtils.isEmpty(lastIndexStr)) {
 			index = Integer.parseInt(lastIndexStr.split("#")[0]) - 1;
 		}
-		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index))) {
+		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index)) && index <= end) {
 			try {
-				long start = System.currentTimeMillis();
+				long startTime = System.currentTimeMillis();
 				Global.Logger().trace(JSON.toJSONString(enterprise));
 				IndexRequest request = new IndexRequest().id(String.valueOf(enterprise.getId())).type("_doc")
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
-				redisTemplate.opsForValue().set("currentESIndexAndLastESLoopTime", index + "#" + (System
-						.currentTimeMillis() - start));
+				redisTemplate.opsForValue()
+						.set(Thread.currentThread().getName(), index + "#" + (System.currentTimeMillis() - startTime));
 				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);

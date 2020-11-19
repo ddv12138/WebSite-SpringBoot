@@ -1,5 +1,6 @@
 package ddvudo.Controller;
 
+import ddvudo.GlobalUtils.Global;
 import ddvudo.ScheduledTask.ElasticSearchTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,6 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @RestController
 @RequestMapping("/enterprise")
@@ -15,7 +20,7 @@ public class EnterpriseController {
 	@Autowired
 	ElasticSearchTask task;
 
-	public static Thread transThread = null;
+	public static final ExecutorService pool = Executors.newCachedThreadPool();
 
 	@RequestMapping("/getEnterpriseList")
 	@ResponseBody
@@ -25,14 +30,14 @@ public class EnterpriseController {
 
 	@RequestMapping("/transDataToEs")
 	public boolean transDataToEs() {
-		transThread = new Thread(() -> task.doTask());
-		transThread.setName("dataThread");
-		transThread.start();
+		final int totalSIze = 5888628;
+		int coreSize = Runtime.getRuntime().availableProcessors();
+		int dataPreThread = (int) Math.ceil((double) totalSIze / (double) coreSize);
+		for (int i = 0; i < coreSize; i++) {
+			int start = ((dataPreThread * i) + 1);
+			int end = Math.min(((dataPreThread * i) + dataPreThread), totalSIze);
+			pool.submit(() -> task.doTask(start, end));
+		}
 		return true;
-	}
-
-	@RequestMapping("/transStates")
-	public Thread.State transStates() {
-		return transThread.getState();
 	}
 }

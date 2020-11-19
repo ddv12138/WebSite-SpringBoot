@@ -1,4 +1,5 @@
 import ddvudo.Application;
+import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -48,21 +49,27 @@ public class DataTest {
 //			Global.Logger(this).info(JSON.toJSONString(res));
 //		}
 //		transactionManager.commit(status);
-		String url = encryptor.encrypt(
-				"jdbc:postgresql://127.0.0.1:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8");
-		String name = encryptor.encrypt("postgres");
-		String password = encryptor.encrypt("liukang951006");
-		System.out.println("----------------");
-		System.out.println(url);
-		System.out.println(name);
-		System.out.println(password);
-		System.out.println(encryptor.encrypt("194.156.133.226"));
-		System.out.println(encryptor.encrypt("6379"));
-		System.out.println(encryptor.encrypt(
-				"jdbc:postgresql://localhost:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8"));
-		Assert.assertTrue(name.length() > 0);
-		Assert.assertTrue(password.length() > 0);
-
+//		String url = encryptor.encrypt(
+//				"jdbc:postgresql://127.0.0.1:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8");
+//		String name = encryptor.encrypt("postgres");
+//		String password = encryptor.encrypt("liukang951006");
+//		System.out.println("----------------");
+//		System.out.println(url);
+//		System.out.println(name);
+//		System.out.println(password);
+//		System.out.println(encryptor.encrypt("194.156.133.226"));
+//		System.out.println(encryptor.encrypt("6379"));
+//		System.out.println(encryptor.encrypt(
+//				"jdbc:postgresql://localhost:5432/how2jdb?characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8"));
+//		Assert.assertTrue(name.length() > 0);
+//		Assert.assertTrue(password.length() > 0);
+//		final int totalSIze = 5888628;
+//		int coreSize = Runtime.getRuntime().availableProcessors();
+//		int dataPreThread = (int) Math.ceil((double)totalSIze/(double)coreSize);
+//		for(int i=0;i<coreSize;i++){
+//			int end = Math.min(((dataPreThread * i) + dataPreThread), totalSIze);
+//			Global.Logger().info(((dataPreThread*i)+1)+"#"+(end));
+//		}
 //		Cursor<Object> cursor = null;
 //		SqlSession sqlSession = null;
 //		sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
