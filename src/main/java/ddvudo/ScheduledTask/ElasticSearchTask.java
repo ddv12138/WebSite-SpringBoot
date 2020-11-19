@@ -42,13 +42,14 @@ public class ElasticSearchTask {
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		// 4.获得事务状态
 		TransactionStatus status = transactionManager.getTransaction(def);
+		String cursorName = enterpriseRegistrationMapper.selectCursor(Thread.currentThread().getName());
 		EnterpriseRegistration enterprise;
 		String lastIndexStr = redisTemplate.opsForValue().get(Thread.currentThread().getName());
 		int index = start;
 		if (!StringUtils.isEmpty(lastIndexStr)) {
 			index = Integer.parseInt(lastIndexStr.split("#")[0]) - 1;
 		}
-		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext("test", index)) && index <= end) {
+		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext(cursorName, index)) && index <= end) {
 			try {
 				long startTime = System.currentTimeMillis();
 				Global.Logger().trace(JSON.toJSONString(enterprise));
