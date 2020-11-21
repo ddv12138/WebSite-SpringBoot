@@ -1,11 +1,9 @@
 import ddvudo.Application;
-import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.jasypt.encryption.StringEncryptor;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @SpringBootTest(classes = Application.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,7 +23,7 @@ public class DataTest {
 	@Autowired
 	private DataSourceTransactionManager transactionManager;
 
-	private static final String ELASTICSEARCH_URL = "ddvudo.buzz";
+	private static final String ELASTICSEARCH_URL = "192.168.5.5";
 	private static final short ELASTICSEARCH_PORT = 9200;
 	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
 			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
@@ -34,6 +31,7 @@ public class DataTest {
 	StringEncryptor encryptor;
 	@Autowired
 	RedisTemplate<String, String> redisTemplate;
+
 	@Test
 	public void test() throws IOException, InterruptedException {
 //		// 2.获取事务定义
@@ -78,8 +76,16 @@ public class DataTest {
 //		sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
 //		cursor = sqlSession.selectCursor(HouseMapper.class.getName() + ".selectList");
 //		cursor.forEach(e -> {
-//			Global.Logger(this).info(e);
+//			Global.Logger(tis).info(e);
 //		});
 //		cursor.close();
+
+//		EnterpriseRegistration enterprise = enterpriseRegistrationMapper.selectByPrimaryKey("184077");
+//		Global.Logger().info(enterprise);
+//		IndexRequest request = new IndexRequest().id(String.valueOf(enterprise.getId())).type("_doc")
+//				.index("enterprise");
+//		request.source(JSON.toJSONString(enterprise), XContentType.JSON);
+//		IndexResponse res = client.index(request, RequestOptions.DEFAULT);
+//		Global.Logger().info(JSON.toJSONString(res));
 	}
 }

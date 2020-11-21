@@ -58,13 +58,10 @@ public class ElasticSearchTask {
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
-				int finalIndex = index;
 				String threadKey = Thread.currentThread().getName();
-				new Thread(() -> {
-					redisTemplate.opsForValue()
-							.set(threadKey, finalIndex + "-" + (System.currentTimeMillis() - startTime));
-					redisTemplate.opsForValue().increment(totalRedisKey);
-				}).start();
+				redisTemplate.opsForValue()
+						.set(threadKey, index + "-" + (System.currentTimeMillis() - startTime));
+				redisTemplate.opsForValue().increment(totalRedisKey);
 				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);
