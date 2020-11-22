@@ -5,10 +5,8 @@ import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import ddvudo.ORM.POJO.EnterpriseRegistration;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Component
 public class ElasticSearchTask {
-	private static final String ELASTICSEARCH_URL = "127.0.0.1";
-	private static final short ELASTICSEARCH_PORT = 9200;
-	private static final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(
-			new HttpHost(ELASTICSEARCH_URL, ELASTICSEARCH_PORT)));
+	@Autowired
+	RestHighLevelClient client;
 	private static final String totalRedisKey = "ESTotal";
 	@Autowired
 	RedisTemplate<String, String> redisTemplate;
