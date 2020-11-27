@@ -4,6 +4,8 @@ import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import ddvudo.ORM.POJO.EnterpriseRegistration;
 import ddvudo.ORM.POJO.EnterpriseRegistrationExample;
 import ddvudo.Service.Services.EnterpriseRegistrationService;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +14,7 @@ import java.util.List;
 @Service
 public class EnterpriseRegistrationServiceImpl implements EnterpriseRegistrationService {
 
-	@Resource
+	@Autowired
 	private EnterpriseRegistrationMapper enterpriseRegistrationMapper;
 
 	@Override
