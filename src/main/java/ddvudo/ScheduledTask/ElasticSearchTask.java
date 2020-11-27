@@ -5,10 +5,8 @@ import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
 import ddvudo.ORM.POJO.EnterpriseRegistration;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +54,10 @@ public class ElasticSearchTask {
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
 				client.index(request, RequestOptions.DEFAULT);
-				int finalIndex = index;
 				String threadKey = Thread.currentThread().getName();
-				new Thread(() -> {
-					redisTemplate.opsForValue()
-							.set(threadKey, finalIndex + "-" + (System.currentTimeMillis() - startTime));
-					redisTemplate.opsForValue().increment(totalRedisKey);
-				}).start();
+				redisTemplate.opsForValue()
+						.set(threadKey, index + "-" + (System.currentTimeMillis() - startTime));
+				redisTemplate.opsForValue().increment(totalRedisKey);
 				index += 1;
 			} catch (Exception e) {
 				Global.Logger().error(e);

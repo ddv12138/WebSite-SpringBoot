@@ -105,12 +105,12 @@
     select
     <include refid="Base_Column_List"/>
     from enterprise_registration
-    where `Id` = #{id,jdbcType=VARCHAR}
+    where "Id" = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
     delete from enterprise_registration
-    where `Id` = #{id,jdbcType=VARCHAR}
+    where "Id" = #{id,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="ddvudo.ORM.POJO.EnterpriseRegistrationExample">
     <!--@mbg.generated-->
