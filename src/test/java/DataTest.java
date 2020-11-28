@@ -1,6 +1,7 @@
 import ddvudo.Application;
 import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
+import ddvudo.ScheduledTask.WXRobotTask;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -31,7 +32,10 @@ public class DataTest {
 	@Autowired
 	StringEncryptor encryptor;
 	@Autowired
+	WXRobotTask wxRobotTask;
+	@Autowired
 	RedisTemplate<String, String> redisTemplate;
+
 	@Test
 	public void test() throws IOException, InterruptedException {
 //		// 2.获取事务定义
@@ -89,5 +93,6 @@ public class DataTest {
 //		searchRequest.source(searchSourceBuilder);
 //		SearchResponse searchResponse = client.search(searchRequest,RequestOptions.DEFAULT);
 //		Global.Logger().info(JSON.toJSONString(searchResponse));
+		//wxRobotTask.pushMessage();
 	}
 }
