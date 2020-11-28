@@ -21,7 +21,7 @@ public class WXRobotTask {
 	String QYWX_webhook;
 	SimpleDateFormat ymdhms = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	@Scheduled(fixedRate = 1000 * 30)
+//	@Scheduled(fixedRate = 1000 * 30)
 	public void pushMessage() {
 		JSONObject body = new JSONObject();
 		JSONObject text = new JSONObject();
