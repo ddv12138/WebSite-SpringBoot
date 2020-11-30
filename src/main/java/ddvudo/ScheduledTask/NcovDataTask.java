@@ -51,17 +51,17 @@ public class NcovDataTask {
 				List<Ncov> ncovList = new LinkedList<>();
 				for (CSVRecord record : records) {
 					Ncov ncov = new Ncov();
-					ncov.setProvince(record.get("province").equals("") ? null : record.get("province"));
-					ncov.setCountrycode(record.get("countryCode").equals("") ? null : record.get("countryCode"));
-					ncov.setCountry(record.get("country").equals("") ? null : record.get("country"));
-					ncov.setConfirmed(record.get("confirmed").equals("") ? null : record.get("confirmed"));
-					ncov.setCitycode(record.get("cityCode").equals("") ? null : record.get("cityCode"));
-					ncov.setCity(record.get("city").equals("") ? null : record.get("city"));
-					ncov.setCured(record.get("cured").equals("") ? null : record.get("cured"));
-					ncov.setDate(ymd.parse(record.get("date")));
-					ncov.setDead(record.get("dead").equals("") ? null : record.get("dead"));
-					ncov.setProvincecode(record.get("provinceCode").equals("") ? null : record.get("provinceCode"));
-					ncov.setSuspected(record.get("suspected").equals("") ? null : record.get("suspected"));
+					ncov.setProvince(record.isMapped("date") && record.isSet("date") ? record.get("province") : null);
+					ncov.setCountrycode(record.isMapped("date") && record.isSet("date") ? record.get("countryCode") : null);
+					ncov.setCountry(record.isMapped("date") && record.isSet("date") ? record.get("country") : null);
+					ncov.setConfirmed(record.isMapped("date") && record.isSet("date") ? record.get("confirmed") : null);
+					ncov.setCitycode(record.isMapped("date") && record.isSet("date") ? record.get("cityCode") : null);
+					ncov.setCity(record.isMapped("date") && record.isSet("date") ? record.get("city") : null);
+					ncov.setCured(record.isMapped("date") && record.isSet("date") ? record.get("cured") : null);
+					ncov.setDate(record.isMapped("date") && record.isSet("date") ? ymd.parse(record.get("date")) : null);
+					ncov.setDead(record.isMapped("dead") && record.isSet("dead") ? record.get("dead") : null);
+					ncov.setProvincecode(record.isMapped("provinceCode") && record.isSet("provinceCode") ? record.get("provinceCode") : null);
+					ncov.setSuspected(record.isMapped("suspected") && record.isSet("suspected") ? record.get("suspected") : null);
 					ncovList.add(ncov);
 				}
 				ncovService.insertAll(ncovList);
