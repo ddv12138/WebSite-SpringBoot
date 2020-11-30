@@ -147,16 +147,21 @@ public class Global {
 		URL url = new URL(urlStr);
 		RestTemplate restTemplate = new RestTemplate();
 		Proxy proxy = null;
-		try {
-			String proxyStr = restTemplate.getForObject("http://10.0.0.3:5010/get/", String.class);
-			JSONObject proxyObj = JSON.parseObject(proxyStr);
-			String proxyHost = proxyObj.getString("proxy").split(":")[0];
-			String proxyPort = proxyObj.getString("proxy").split(":")[1];
-			proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort)));
-		} catch (Exception e) {
-			Global.logger().error(e);
+//		try {
+//			String proxyStr = restTemplate.getForObject("http://10.0.0.3:5010/get/", String.class);
+//			JSONObject proxyObj = JSON.parseObject(proxyStr);
+//			String proxyHost = proxyObj.getString("proxy").split(":")[0];
+//			String proxyPort = proxyObj.getString("proxy").split(":")[1];
+//			proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort)));
+//		} catch (Exception e) {
+//			Global.logger().error(e);
+//		}
+		HttpURLConnection conn = null;
+		if (null != proxy) {
+			conn = (HttpURLConnection) url.openConnection(proxy);
+		} else {
+			conn = (HttpURLConnection) url.openConnection();
 		}
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
 		//设置超时间为3秒
 		conn.setConnectTimeout(3 * 1000);
 		//防止屏蔽程序抓取而返回403错误
