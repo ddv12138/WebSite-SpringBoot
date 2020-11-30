@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PointCut {
 
-	@Around("execution(* ddvudo.WebComponent.Controller.*.*(..))")
+	@Around("execution(* ddvudo.Controller.*.*(..))")
 	public Object controllerAnalysis(ProceedingJoinPoint joinPoint) throws Throwable {
 		return processPointCut(joinPoint, "Controller");
 	}
@@ -22,7 +22,7 @@ public class PointCut {
 		StringBuilder sb = new StringBuilder();
 		sb.append("调用" + cutType + ":" + joinPoint.getSignature().getName() + ",");
 		sb.append("耗时：" + (end - start) + "ms" + "");
-		Global.Logger().info(sb.toString());
+		Global.logger().info(sb.toString());
 		return obj;
 	}
 }

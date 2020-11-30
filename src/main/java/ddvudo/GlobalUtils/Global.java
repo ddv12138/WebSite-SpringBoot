@@ -6,9 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ import java.util.HashMap;
 public class Global {
 
 
-	public static Logger Logger() {
+	public static Logger logger() {
 		return LogManager.getLogger(new Throwable().getStackTrace()[1].getClassName());
 	}
 
@@ -51,23 +54,23 @@ public class Global {
 			String resStr = result.substring(result.indexOf("{"), result.lastIndexOf(")"));
 			JSONObject res = JSON.parseObject(resStr);
 			if (null != res && !res.isEmpty() && res.getIntValue("errno") == 10001 && res.getString("error").contains("data")) {
-				Global.Logger().error("被封ip");
+				Global.logger().error("被封ip");
 				if (retry > 0) {
-					Global.Logger().error("重新连接");
+					Global.logger().error("重新连接");
 					retry = retry - 1;
 					postHTTPRequest(linkUrl, headers, retry);
 				}
 			}
 			return resStr;
 		} catch (Exception e) {
-			Global.Logger().error(e);
-			Global.Logger().info("连接失败");
+			Global.logger().error(e);
+			Global.logger().info("连接失败");
 			if (null != connection) {
 				connection.disconnect();
 				connection = null;
 			}
 			if (retry > 0) {
-				Global.Logger().error("重新连接");
+				Global.logger().error("重新连接");
 				retry = retry - 1;
 				return postHTTPRequest(linkUrl, headers, retry);
 			}
@@ -111,7 +114,7 @@ public class Global {
 				result = sbf.toString();
 			}
 		} catch (Exception e) {
-			Global.Logger().error(e);
+			Global.logger().error(e);
 			e.printStackTrace();
 		} finally {
 			// 关闭资源
@@ -142,7 +145,18 @@ public class Global {
 	 */
 	public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
 		URL url = new URL(urlStr);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		RestTemplate restTemplate = new RestTemplate();
+		Proxy proxy = null;
+		try {
+			String proxyStr = restTemplate.getForObject("http://10.0.0.3:5010/get/", String.class);
+			JSONObject proxyObj = JSON.parseObject(proxyStr);
+			String proxyHost = proxyObj.getString("proxy").split(":")[0];
+			String proxyPort = proxyObj.getString("proxy").split(":")[1];
+			proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort)));
+		} catch (Exception e) {
+			Global.logger().error(e);
+		}
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
 		//设置超时间为3秒
 		conn.setConnectTimeout(3 * 1000);
 		//防止屏蔽程序抓取而返回403错误
@@ -162,7 +176,7 @@ public class Global {
 			try (FileOutputStream fos = new FileOutputStream(file)) {
 				fos.write(getData);
 			}
-			Global.Logger().info("info:" + url + " download success");
+			Global.logger().info("info:" + url + " download success");
 		}
 	}
 

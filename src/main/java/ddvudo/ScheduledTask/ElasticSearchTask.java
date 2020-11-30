@@ -49,7 +49,7 @@ public class ElasticSearchTask {
 		while (null != (enterprise = enterpriseRegistrationMapper.fetchNext(cursorName, index)) && index <= end) {
 			try {
 				long startTime = System.currentTimeMillis();
-				Global.Logger().trace(JSON.toJSONString(enterprise));
+				Global.logger().trace(JSON.toJSONString(enterprise));
 				IndexRequest request = new IndexRequest().id(String.valueOf(enterprise.getId())).type("_doc")
 						.index("enterprise");
 				request.source(JSON.toJSONString(enterprise), XContentType.JSON);
@@ -60,7 +60,7 @@ public class ElasticSearchTask {
 				redisTemplate.opsForValue().increment(totalRedisKey);
 				index += 1;
 			} catch (Exception e) {
-				Global.Logger().error(e);
+				Global.logger().error(e);
 			}
 		}
 		transactionManager.commit(status);

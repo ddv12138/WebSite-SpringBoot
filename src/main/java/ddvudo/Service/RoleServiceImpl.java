@@ -73,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<Role> listRoleByUser(Integer userid) {
-		Global.Logger().info(mapper.toString());
+		Global.logger().info(mapper.toString());
 		User user = userMapper.selectById(userid);
 		Assert.notNull(user, "用户不存在");
 		return mapper.listRoleByUser(user);

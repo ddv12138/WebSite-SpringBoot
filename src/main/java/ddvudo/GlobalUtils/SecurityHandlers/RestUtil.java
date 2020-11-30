@@ -25,7 +25,7 @@ public class RestUtil {
 			response.setContentType("application/json;charset=utf-8");
 			response.getWriter().write(resStr);
 		} catch (IOException e) {
-			Global.Logger().error(e.getMessage(), e);
+			Global.logger().error(e.getMessage(), e);
 		}
 	}
 }

@@ -39,7 +39,7 @@ public class RestUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 				username = map.get("username");
 				password = map.get("password");
 			} catch (IOException e) {
-				Global.Logger().error(e);
+				Global.logger().error(e);
 			}
 			if (username == null) {
 				username = "";

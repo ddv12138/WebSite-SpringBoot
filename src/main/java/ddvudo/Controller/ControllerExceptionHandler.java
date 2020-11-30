@@ -31,7 +31,7 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public CommonResult handleOtherException(Exception e) {
-		Global.Logger().error(e);
+		Global.logger().error(e);
 		return new CommonResult(SystemCode.InnerError, "控制器导致服务器内部错误", null);
 	}
 }

@@ -3,11 +3,8 @@ package ddvudo.ScheduledTask;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import ddvudo.GlobalUtils.Global;
-import org.elasticsearch.common.Glob;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +34,7 @@ public class WXRobotTask {
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity(body, headers);
 		//执行HTTP请求，将返回的结构使用ResultVO类格式化
 		ResponseEntity<?> response = restTemplate.exchange(QYWX_webhook, method, requestEntity, Object.class);
-		Global.Logger().info(QYWX_webhook);
-		Global.Logger().info(JSON.toJSONString(response));
+		Global.logger().info(QYWX_webhook);
+		Global.logger().info(JSON.toJSONString(response));
 	}
 }

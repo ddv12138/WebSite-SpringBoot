@@ -40,7 +40,7 @@ public class NcovDataTask {
 //			Global.downLoadFromUrl("https://raw.githubusercontent.com/canghailan/Wuhan-2019-nCoV/master/Wuhan-2019-nCoV.json", "nCoVData.json", location);
 			Global.downLoadFromUrl("https://raw.githubusercontent.com/canghailan/Wuhan-2019-nCoV/master/Wuhan-2019-nCoV.csv", "nCoVData.csv", location);
 		} catch (Exception e) {
-			Global.Logger().error(e);
+			Global.logger().error(e);
 		}
 		try {
 			File csvFile = new File(location + "/nCoVData.csv");
@@ -67,7 +67,7 @@ public class NcovDataTask {
 				ncovService.insertAll(ncovList);
 			}
 		} catch (Exception e) {
-			Global.Logger().error(e);
+			Global.logger().error(e);
 		}
 	}
 }
