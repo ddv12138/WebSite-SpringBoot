@@ -1,12 +1,7 @@
 import ddvudo.Application;
-import ddvudo.GlobalUtils.Global;
 import ddvudo.ORM.Mapper.EnterpriseRegistrationMapper;
-import ddvudo.ScheduledTask.WXRobotTask;
-import org.apache.http.HttpHost;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.jasypt.encryption.StringEncryptor;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +11,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @SpringBootTest(classes = Application.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,8 +25,6 @@ public class DataTest {
 	RestHighLevelClient client;
 	@Autowired
 	StringEncryptor encryptor;
-	@Autowired
-	WXRobotTask wxRobotTask;
 	@Autowired
 	RedisTemplate<String, String> redisTemplate;
 

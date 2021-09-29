@@ -1,5 +1,6 @@
 package ddvudo.GlobalUtils.Config;
 
+import ddvudo.GlobalUtils.Global;
 import ddvudo.GlobalUtils.PasswdEncoder;
 import ddvudo.GlobalUtils.SecurityHandlers.*;
 import ddvudo.Service.Services.UserService;
@@ -56,6 +57,7 @@ public class SecurityConfig<S extends Session>
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		Global.logger().info(PathRequest.toStaticResources().atCommonLocations());
 		http.authorizeRequests()
 				.antMatchers(AUTH_WHITELIST).permitAll()
 				.regexMatchers(".*(css|js|ico|png|jpg|html)\\??[^/\\\\]*").permitAll()

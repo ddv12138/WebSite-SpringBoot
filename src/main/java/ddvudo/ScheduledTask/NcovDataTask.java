@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
-@Profile("server")
+//@Component
+//@Profile("server")
 public class NcovDataTask {
 	//commons-csv官方文档
 	//https://commons.apache.org/proper/commons-csv/user-guide.html#Example:_Parsing_an_Excel_CSV_File

@@ -22,5 +22,6 @@ AllowedIPs = ${peer.allowedIPs}
 <#if peer.endpoint??>
 Endpoint = ${peer.endpoint}
 </#if>
+PersistentKeepalive = 35
 </#list>
 <#--@formatter:on-->
