@@ -34,7 +34,7 @@ public class NcovDataTask {
 		this.redisTemplate = redisTemplate;
 	}
 
-	@Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 1 * 60 * 1000)
+//	@Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 1 * 60 * 1000)
 	public void downloadData() {
 		try {
 //			Global.downLoadFromUrl("https://raw.githubusercontent.com/canghailan/Wuhan-2019-nCoV/master/Wuhan-2019-nCoV.json", "nCoVData.json", location);

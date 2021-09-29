@@ -35,7 +35,7 @@ public class LianjiaDataTask {
 	}
 
 
-	@Scheduled(fixedRate = 1000 * 60 * 60 * 24, initialDelay = 180 * 1000)
+//	@Scheduled(fixedRate = 1000 * 60 * 60 * 24, initialDelay = 180 * 1000)
 	public void getCommunityDataByCity() {
 		int index = 0;
 		String citystr = cities[index];
