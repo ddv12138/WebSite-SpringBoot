@@ -80,6 +80,7 @@ public class SecurityConfig<S extends Session>
 		http.csrf().disable();
 //		http.authorizeRequests().anyRequest().permitAll();
 		http.headers().frameOptions().disable();
+		http.headers().httpStrictTransportSecurity().disable();
 		//spring session配置
 //		http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
 	}
